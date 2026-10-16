@@ -1,0 +1,6 @@
+{
+  "name": "Arsip Jurnal Studi Al-Qur'an & Tafsir",
+  "description": "Direktori dan repositori digital interaktif 46 artikel jurnal studi Al-Qur'an, mufasir, teks, dan living Qur'an dengan live search dan filter klasifikasi.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
