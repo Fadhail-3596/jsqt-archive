@@ -1,60 +1,78 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
-  LayoutDashboard, 
-  BookOpen, 
-  FileText, 
-  ExternalLink, 
-  Download, 
   Search, 
   X, 
-  Layers, 
+  Download, 
+  ExternalLink, 
   User, 
-  Info, 
   Check, 
   Copy, 
-  Globe, 
-  ArrowRight,
-  Table as TableIcon,
-  LayoutGrid,
+  FileCheck2, 
+  ChevronRight,
+  ChevronDown,
+  BookOpen,
+  ArrowUpRight,
+  Menu,
+  RotateCcw,
+  BookMarked,
+  Filter,
+  GraduationCap,
   Sparkles,
-  Quote,
-  GraduationCap
+  Calendar,
+  FileText
 } from 'lucide-react';
-import { Article, ARTICLES } from './data/articles';
+import { Article, ARTICLES, VOLUMES, FILTER_CATEGORIES } from './data/articles';
 
-type TabType = 'home' | 'articles' | 'about';
-type ViewMode = 'table' | 'grid';
-
-const CATEGORIES = [
-  'Semua',
-  'Studi Tokoh/Mufasir',
-  'Studi Internal Teks',
-  "Living Qur'an",
-  'Studi Eksternal Teks',
-  'Unclassified'
-] as const;
+type PageTab = 'naskah' | 'tentang' | 'petunjuk';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<TabType>('home');
-  const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
+  const [activeTab, setActiveTab] = useState<PageTab>('naskah');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [viewMode, setViewMode] = useState<ViewMode>('table');
+  const [selectedCategory, setSelectedCategory] = useState<string>('Semua Topik Kajian');
+  const [selectedVolume, setSelectedVolume] = useState<string>('Semua Volume & Tahun');
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [copiedType, setCopiedType] = useState<string | null>(null);
+  const [copiedFormat, setCopiedFormat] = useState<string | null>(null);
+  const [expandedAbstracts, setExpandedAbstracts] = useState<Record<number, boolean>>({});
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 2500);
+    setTimeout(() => setToastMessage(null), 2500);
   };
 
-  // Filtered Articles
+  const handleTabChange = (tab: PageTab) => {
+    setActiveTab(tab);
+    setMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const toggleAbstract = (no: number) => {
+    setExpandedAbstracts(prev => ({
+      ...prev,
+      [no]: !prev[no]
+    }));
+  };
+
+  // Category counts
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {
+      'Semua Topik Kajian': ARTICLES.length
+    };
+    ARTICLES.forEach(a => {
+      counts[a.klasifikasi] = (counts[a.klasifikasi] || 0) + 1;
+    });
+    return counts;
+  }, []);
+
+  // Filter logic
   const filteredArticles = useMemo(() => {
     return ARTICLES.filter((article) => {
-      const matchCat =
-        selectedCategory === 'Semua' ||
+      const matchVolume =
+        selectedVolume === 'Semua Volume & Tahun' || article.volume === selectedVolume;
+
+      const matchCategory =
+        selectedCategory === 'Semua Topik Kajian' ||
         (selectedCategory === 'Unclassified'
           ? article.klasifikasi === 'Unclassified'
           : article.klasifikasi === selectedCategory);
@@ -66,955 +84,774 @@ export default function App() {
         article.penulis.toLowerCase().includes(q) ||
         article.ringkasan.toLowerCase().includes(q) ||
         article.klasifikasi.toLowerCase().includes(q) ||
+        article.doi.toLowerCase().includes(q) ||
+        article.volume.toLowerCase().includes(q) ||
         article.no.toString() === q;
 
-      return matchCat && matchSearch;
+      return matchVolume && matchCategory && matchSearch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [selectedVolume, selectedCategory, searchQuery]);
 
-  // Category counts
-  const categoryCounts = useMemo(() => {
-    const counts: Record<string, number> = {
-      Semua: ARTICLES.length,
-      'Studi Tokoh/Mufasir': 0,
-      'Studi Internal Teks': 0,
-      "Living Qur'an": 0,
-      'Studi Eksternal Teks': 0,
-      Unclassified: 0
-    };
-    ARTICLES.forEach((a) => {
-      if (counts[a.klasifikasi] !== undefined) {
-        counts[a.klasifikasi]++;
-      }
-    });
-    return counts;
-  }, []);
-
-  // Featured sample articles for Home Dashboard
-  const featuredArticles = useMemo(() => {
-    return [
-      ARTICLES[0],  // Dakwah Gusdurian
-      ARTICLES[1],  // Tafsir Al-Hijri (Tokoh)
-      ARTICLES[2],  // Dakwah Nabi Ibrahim (Internal Teks)
-      ARTICLES[8],  // Surat Al-Ikhlas (Living Qur'an)
-      ARTICLES[10], // QS. Al-Nur: 30-31 (Eksternal Teks)
-      ARTICLES[6],  // Kewarganegaraan Tafsir Al-Azhar (Tokoh)
-    ];
-  }, []);
-
-  const getCategoryBadgeClass = (category: string) => {
-    switch (category) {
-      case 'Studi Tokoh/Mufasir':
-        return 'bg-blue-500/15 text-blue-400 border-blue-500/30';
-      case 'Studi Internal Teks':
-        return 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
-      case "Living Qur'an":
-        return 'bg-purple-500/15 text-purple-400 border-purple-500/30';
-      case 'Studi Eksternal Teks':
-        return 'bg-amber-500/15 text-amber-400 border-amber-500/30';
-      default:
-        return 'bg-slate-700/40 text-slate-400 border-slate-600/40';
-    }
+  const resetFilters = () => {
+    setSelectedCategory('Semua Topik Kajian');
+    setSelectedVolume('Semua Volume & Tahun');
+    setSearchQuery('');
   };
 
-  const copyCitation = (article: Article, style: 'apa' | 'chicago') => {
-    let citation = '';
-    if (style === 'apa') {
-      citation = `${article.penulis}. "${article.judul}". Jurnal Studi Al-Qur'an dan Tafsir (JSQT) Universitas Annuqayah. ${article.aksesUrl}`;
+  const isFiltered = selectedCategory !== 'Semua Topik Kajian' || selectedVolume !== 'Semua Volume & Tahun' || searchQuery.trim().length > 0;
+
+  // Citation generator
+  const copyCitation = (article: Article, format: 'apa' | 'chicago' | 'harvard' | 'bibtex') => {
+    let text = '';
+    const volNum = article.volume.split('(')[0].trim();
+    if (format === 'apa') {
+      text = `${article.penulis}. (${article.tahun}). ${article.judul}. Jurnal Studi Al-Qur'an dan Tafsir (JSQT), ${volNum}, ${article.halaman}. ${article.doi}`;
+    } else if (format === 'chicago') {
+      text = `${article.penulis}, "${article.judul}," Jurnal Studi Al-Qur'an dan Tafsir (JSQT) ${volNum} (${article.tahun}): ${article.halaman.replace('hlm. ', '')}. ${article.doi}`;
+    } else if (format === 'harvard') {
+      text = `${article.penulis}, ${article.tahun}. ${article.judul}. Jurnal Studi Al-Qur'an dan Tafsir (JSQT), ${volNum}, pp.${article.halaman.replace('hlm. ', '')}.`;
     } else {
-      citation = `${article.penulis}, "${article.judul}," Jurnal Studi Al-Qur'an dan Tafsir (JSQT) Universitas Annuqayah, diakses dari ${article.aksesUrl}.`;
+      const citeKey = `${article.penulis.split(' ')[0].toLowerCase()}${article.tahun}`;
+      text = `@article{${citeKey},
+  author = {${article.penulis}},
+  title = {${article.judul}},
+  journal = {Jurnal Studi Al-Qur'an dan Tafsir},
+  volume = {${volNum}},
+  year = {${article.tahun}},
+  pages = {${article.halaman.replace('hlm. ', '')}},
+  doi = {${article.doi}}
+}`;
     }
-    navigator.clipboard.writeText(citation).then(() => {
-      setCopiedType(style);
-      showToast(`Sitasi format ${style.toUpperCase()} berhasil disalin!`);
-      setTimeout(() => setCopiedType(null), 2000);
+
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedFormat(format);
+      showToast(`Sitasi format ${format.toUpperCase()} berhasil disalin!`);
+      setTimeout(() => setCopiedFormat(null), 2000);
     });
   };
+
+  const getCategoryBadgeClass = (klasifikasi: string) => {
+    switch (klasifikasi) {
+      case 'Studi Internal Teks':
+        return 'bg-emerald-50 text-emerald-800 border-emerald-200/80';
+      case 'Studi Tokoh/Mufasir':
+        return 'bg-indigo-50 text-indigo-800 border-indigo-200/80';
+      case "Living Qur'an":
+        return 'bg-teal-50 text-teal-800 border-teal-200/80';
+      case 'Studi Eksternal Teks':
+        return 'bg-sky-50 text-sky-800 border-sky-200/80';
+      default:
+        return 'bg-slate-100 text-slate-700 border-slate-200';
+    }
+  };
+
+  useEffect(() => {
+    if (mobileMenuOpen || selectedArticle) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [mobileMenuOpen, selectedArticle]);
 
   return (
-    <div className="bg-[#0b0f19] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white pb-20 md:pb-6 font-sans">
+    <div className="min-h-screen bg-[#FAFAFA] text-[#1E293B] flex flex-col font-sans selection:bg-[#0F382C]/15 selection:text-[#0F382C]">
       
-      {/* Toast Notification */}
+      {/* Toast Alert */}
       {toastMessage && (
-        <div className="fixed top-20 right-4 z-50 flex items-center gap-2.5 bg-blue-600/95 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow-2xl backdrop-blur-md border border-blue-400/30 animate-in fade-in slide-in-from-top duration-200">
-          <Check className="w-4 h-4 text-emerald-300" />
+        <div className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 flex items-center gap-2.5 bg-[#0F382C] text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium shadow-xl border border-emerald-600/30 animate-in fade-in slide-in-from-bottom duration-200">
+          <Check className="w-4 h-4 text-emerald-300 shrink-0" />
           <span>{toastMessage}</span>
         </div>
       )}
 
-      {/* TOP NAVBAR (Writely Glassmorphism Style) */}
-      <header className="sticky top-0 z-40 bg-[#131b2e]/85 backdrop-blur-md border-b border-[#1e293b]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      {/* =========================================================
+          1. HEADER (BRANDING RINGKAS & SELARAS)
+          [Ikon Buku/Logo] JSQT [Badge: OPEN ACCESS] | Universitas Annuqayah
+          ========================================================= */}
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-15 sm:h-16 flex items-center justify-between gap-3">
           
-          {/* Brand Logo */}
+          {/* Brand Logo & Title Lockup */}
           <div 
-            className="flex items-center space-x-3 cursor-pointer select-none"
-            onClick={() => setActiveTab('home')}
+            onClick={() => handleTabChange('naskah')}
+            className="flex items-center gap-2.5 sm:gap-3 cursor-pointer group select-none py-1"
           >
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-md shadow-blue-500/20 ring-1 ring-white/10">
-              <BookOpen className="w-4 h-4" />
+            {/* Elegant Emblem Logo: Open Qur'an / Academic Book with Emerald Shield */}
+            <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-[#0F382C] via-[#144838] to-[#0A261E] text-white flex items-center justify-center shadow-2xs border border-emerald-700/40 shrink-0 group-hover:scale-105 transition-transform">
+              <svg 
+                className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-100" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="1.8" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                <path d="M6 8h2" />
+                <path d="M6 12h2" />
+                <path d="M16 8h2" />
+                <path d="M16 12h2" />
+              </svg>
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-400 ring-1.5 ring-white"></span>
             </div>
-            <div className="flex flex-col">
-              <div className="flex items-center space-x-2">
-                <span className="font-extrabold text-base sm:text-lg tracking-tight text-white">JSQT</span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30 uppercase tracking-wider">
-                  Arsip IAT
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-400 font-medium -mt-0.5">Universitas Annuqayah</p>
+
+            {/* Typography Lockup: [Ikon] JSQT [Badge: OPEN ACCESS] | Universitas Annuqayah */}
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="font-serif font-extrabold text-lg sm:text-xl text-[#0F382C] tracking-tight leading-none group-hover:text-[#185240] transition">
+                JSQT
+              </span>
+              <span className="text-[10px] font-semibold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200/80 px-1.5 py-0.5 rounded leading-none">
+                Open Access
+              </span>
+              <span className="text-slate-300 font-light hidden xs:inline text-xs sm:text-sm">|</span>
+              <span className="text-xs sm:text-sm text-slate-600 font-medium hidden xs:inline leading-none">
+                Universitas Annuqayah
+              </span>
             </div>
           </div>
 
-          {/* Desktop Navigation Menu (Dashboard, Semua Artikel, Tentang) */}
-          <nav className="hidden md:flex items-center space-x-1 bg-slate-900/60 p-1 rounded-xl border border-[#1e293b]/70">
+          {/* Desktop Navigation Links */}
+          <nav className="hidden md:flex items-center space-x-1 text-xs sm:text-sm font-medium">
             <button
-              onClick={() => setActiveTab('home')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 ${
-                activeTab === 'home'
-                  ? 'text-blue-400 bg-blue-500/10 border border-blue-500/20'
-                  : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/60'
+              onClick={() => handleTabChange('naskah')}
+              className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 ${
+                activeTab === 'naskah'
+                  ? 'text-[#0F382C] font-semibold bg-emerald-50/80 shadow-2xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
               }`}
             >
-              <LayoutDashboard className="w-3.5 h-3.5" />
-              Dashboard
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>Daftar Naskah</span>
             </button>
             <button
-              onClick={() => setActiveTab('articles')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 ${
-                activeTab === 'articles'
-                  ? 'text-blue-400 bg-blue-500/10 border border-blue-500/20'
-                  : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/60'
+              onClick={() => handleTabChange('tentang')}
+              className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 ${
+                activeTab === 'tentang'
+                  ? 'text-[#0F382C] font-semibold bg-emerald-50/80 shadow-2xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
+              }`}
+            >
+              <GraduationCap className="w-3.5 h-3.5" />
+              <span>Tentang Jurnal</span>
+            </button>
+            <button
+              onClick={() => handleTabChange('petunjuk')}
+              className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 ${
+                activeTab === 'petunjuk'
+                  ? 'text-[#0F382C] font-semibold bg-emerald-50/80 shadow-2xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
               }`}
             >
               <FileText className="w-3.5 h-3.5" />
-              Semua Artikel
-            </button>
-            <button
-              onClick={() => setActiveTab('about')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 ${
-                activeTab === 'about'
-                  ? 'text-blue-400 bg-blue-500/10 border border-blue-500/20'
-                  : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/60'
-              }`}
-            >
-              <Info className="w-3.5 h-3.5" />
-              Tentang
+              <span>Petunjuk Penulis</span>
             </button>
           </nav>
 
-          {/* Right Action: External Journal Link */}
-          <div className="flex items-center space-x-2">
+          {/* Action Area */}
+          <div className="flex items-center gap-2">
             <a
-              href="https://journal.ua.ac.id/index.php/jsqt/issue/archive"
+              href="https://journal.ua.ac.id/index.php/jsqt/submission/wizard"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition flex items-center gap-1.5 border border-[#1e293b] hover:border-slate-600 shadow-sm"
-              title="Portal Resmi Jurnal JSQT Universitas Annuqayah"
+              className="min-h-[38px] sm:min-h-[40px] px-3 sm:px-3.5 py-1.5 rounded-lg bg-[#0F382C] hover:bg-[#185240] text-white text-xs font-semibold tracking-wide transition shadow-2xs flex items-center gap-1.5 active:scale-95"
             >
-              <Globe className="w-3.5 h-3.5 text-blue-400" />
-              <span className="hidden sm:inline">Portal OJS</span>
-              <ExternalLink className="w-3 h-3 text-slate-400" />
+              <FileCheck2 className="w-3.5 h-3.5 text-emerald-200" />
+              <span className="hidden xs:inline">Kirim Naskah</span>
+              <span className="xs:hidden">Submit</span>
             </a>
+
+            {/* Hamburger Button for Mobile */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-100 transition active:scale-95"
+              aria-label="Buka Menu"
+            >
+              {mobileMenuOpen ? <X className="w-4 h-4 text-slate-900" /> : <Menu className="w-4 h-4 text-slate-900" />}
+            </button>
           </div>
+
         </div>
       </header>
 
-      {/* MAIN CONTAINER */}
-      <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+      {/* =========================================================
+          MOBILE DRAWER / SHEET
+          ========================================================= */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 md:hidden flex flex-col justify-end">
+          <div 
+            onClick={() => setMobileMenuOpen(false)}
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity"
+          />
 
-        {/* =========================================================
-            VIEW 1: DASHBOARD (HOME)
-            ========================================================= */}
-        {activeTab === 'home' && (
-          <section className="space-y-6 animate-in fade-in duration-200">
-            
-            {/* Welcome Hero Banner */}
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-[#131b2e] to-blue-950/40 border border-[#1e293b] p-6 sm:p-8 shadow-xl">
-              <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-              <div className="relative z-10 max-w-3xl space-y-3">
-                <div className="flex items-center gap-2">
-                  <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-bold border border-blue-500/20 flex items-center gap-1.5">
-                    <Sparkles className="w-3 h-3" />
-                    Arsip Riset IAT • Universitas Annuqayah
-                  </span>
-                  <span className="text-xs text-slate-400 hidden sm:inline">
-                    Journal of Qur'anic Studies & Tafsir (JSQT)
-                  </span>
-                </div>
-                
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
-                  Direktori Riset Ilmu Al-Qur'an & Tafsir
-                </h1>
-                
-                <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                  Sarana eksplorasi riset dosen & civitas akademika Program Studi Ilmu Al-Qur'an dan Tafsir (IAT) Universitas Annuqayah. Memetakan 46 naskah ilmiah berdasarkan 4 Objek Penelitian IAT (Studi Internal Teks, Studi Eksternal Teks, Studi Tokoh/Mufasir, dan Living Qur'an).
-                </p>
-                
-                <div className="pt-2 flex flex-wrap items-center gap-3">
-                  <button
-                    onClick={() => setActiveTab('articles')}
-                    className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold transition flex items-center gap-2 shadow-lg shadow-blue-500/20 active:scale-95"
-                  >
-                    <BookOpen className="w-4 h-4" />
-                    Buka Arsip Lengkap
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('about')}
-                    className="px-4 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-200 text-xs sm:text-sm font-semibold transition flex items-center gap-2 border border-[#1e293b] active:scale-95"
-                  >
-                    <Info className="w-4 h-4 text-blue-400" />
-                    4 Objek Penelitian IAT
-                  </button>
-                </div>
+          <div className="relative bg-white rounded-t-2xl border-t border-slate-200 p-5 space-y-4 shadow-2xl max-h-[85vh] overflow-y-auto z-10 animate-in slide-in-from-bottom duration-200">
+            <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto -mt-1 mb-1" />
+
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2">
+                <span className="font-serif font-bold text-base text-[#0F382C]">JSQT Navigation</span>
+                <span className="text-[10px] font-mono bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">Menu</span>
               </div>
+              <button 
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-500"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
             </div>
 
-            {/* Real-Time Stats Grid (4 Metrics) */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="space-y-1">
+              <button
+                onClick={() => handleTabChange('naskah')}
+                className={`w-full flex items-center justify-between p-2.5 rounded-lg text-xs font-semibold transition ${
+                  activeTab === 'naskah' 
+                    ? 'bg-emerald-50 text-[#0F382C]' 
+                    : 'text-slate-700 hover:bg-slate-50'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <BookOpen className="w-4 h-4 text-emerald-700" />
+                  <span>Daftar Naskah Jurnal</span>
+                </div>
+                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-600">46 Naskah</span>
+              </button>
+
+              <button
+                onClick={() => handleTabChange('tentang')}
+                className={`w-full flex items-center justify-between p-2.5 rounded-lg text-xs font-semibold transition ${
+                  activeTab === 'tentang' 
+                    ? 'bg-emerald-50 text-[#0F382C]' 
+                    : 'text-slate-700 hover:bg-slate-50'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <GraduationCap className="w-4 h-4 text-emerald-700" />
+                  <span>Tentang Jurnal & 4 Objek IAT</span>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+              </button>
+
+              <button
+                onClick={() => handleTabChange('petunjuk')}
+                className={`w-full flex items-center justify-between p-2.5 rounded-lg text-xs font-semibold transition ${
+                  activeTab === 'petunjuk' 
+                    ? 'bg-emerald-50 text-[#0F382C]' 
+                    : 'text-slate-700 hover:bg-slate-50'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <FileText className="w-4 h-4 text-emerald-700" />
+                  <span>Petunjuk Penulis</span>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+              </button>
+            </div>
+
+            <div className="pt-2 border-t border-slate-100 space-y-2">
+              <a
+                href="https://journal.ua.ac.id/index.php/jsqt/submission/wizard"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full min-h-[42px] rounded-lg bg-[#0F382C] text-white flex items-center justify-center gap-2 font-semibold text-xs shadow-2xs"
+              >
+                <FileCheck2 className="w-3.5 h-3.5 text-emerald-200" />
+                <span>Kirim Naskah (Portal OJS)</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================
+          MAIN CONTAINER (FOCUSED & DECLUTTERED)
+          ========================================================= */}
+      <main className="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+        
+        {/* =========================================================
+            TAB 1: DAFTAR NASKAH (SEARCH, FILTER & 2-COLUMN GRID)
+            ========================================================= */}
+        {activeTab === 'naskah' && (
+          <div className="space-y-6">
+            
+            {/* HERO / SEARCH BAR SECTION: Compact & Space-Efficient */}
+            <section className="space-y-3 max-w-3xl mx-auto text-center pt-1">
               
-              {/* Stat 1: Total Artikel */}
-              <div className="bg-[#131b2e] border border-[#1e293b] p-5 rounded-2xl flex flex-col justify-between space-y-2 shadow-sm">
-                <div className="flex items-center justify-between text-slate-400">
-                  <span className="text-xs font-semibold uppercase tracking-wider">Total Artikel</span>
-                  <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center text-xs">
-                    <BookOpen className="w-4 h-4" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-blue-400 font-mono">46</h3>
-                  <p className="text-[11px] text-slate-400 mt-1">Naskah Terpublikasi & Terindeks</p>
-                </div>
-              </div>
-
-              {/* Stat 2: Objek Kajian IAT */}
-              <div className="bg-[#131b2e] border border-[#1e293b] p-5 rounded-2xl flex flex-col justify-between space-y-2 shadow-sm">
-                <div className="flex items-center justify-between text-slate-400">
-                  <span className="text-xs font-semibold uppercase tracking-wider">Objek Kajian IAT</span>
-                  <div className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center text-xs">
-                    <Layers className="w-4 h-4" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-purple-400 font-mono">4 Pilar</h3>
-                  <p className="text-[11px] text-slate-400 mt-1">Klasifikasi Objek Penelitian IAT</p>
-                </div>
-              </div>
-
-              {/* Stat 3: Akses Dokumen */}
-              <div className="bg-[#131b2e] border border-[#1e293b] p-5 rounded-2xl flex flex-col justify-between space-y-2 shadow-sm">
-                <div className="flex items-center justify-between text-slate-400">
-                  <span className="text-xs font-semibold uppercase tracking-wider">Akses Terbuka</span>
-                  <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs">
-                    <Download className="w-4 h-4" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono">100%</h3>
-                  <p className="text-[11px] text-slate-400 mt-1">Open Access & PDF Lengkap</p>
-                </div>
-              </div>
-
-              {/* Stat 4: Basis Repositori */}
-              <div className="bg-[#131b2e] border border-[#1e293b] p-5 rounded-2xl flex flex-col justify-between space-y-2 shadow-sm">
-                <div className="flex items-center justify-between text-slate-400">
-                  <span className="text-xs font-semibold uppercase tracking-wider">Sumber Portal</span>
-                  <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center text-xs">
-                    <Globe className="w-4 h-4" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-amber-400 font-mono">OJS UA</h3>
-                  <p className="text-[11px] text-slate-400 mt-1">Universitas Annuqayah</p>
-                </div>
-              </div>
-
-            </div>
-
-            {/* Featured Sample Articles Grid */}
-            <div className="space-y-4 pt-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg sm:text-xl font-bold text-white">Sorotan Naskah Pilihan</h2>
-                  <p className="text-xs text-slate-400">Sampel kajian metodologis dan tematik tafsir terkini</p>
-                </div>
-                <button
-                  onClick={() => setActiveTab('articles')}
-                  className="text-xs sm:text-sm font-semibold text-blue-400 hover:text-blue-300 transition inline-flex items-center gap-1 group"
-                >
-                  Lihat Semua Arsip (46)
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {featuredArticles.map((article, index) => (
-                  <div
-                    key={article.no}
-                    className="bg-[#131b2e] hover:bg-[#18223a] border border-[#1e293b] hover:border-blue-500/40 p-5 rounded-2xl transition duration-200 flex flex-col justify-between space-y-4 group shadow-sm"
-                  >
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-bold text-slate-300 font-mono bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-700">
-                            {index + 1}
-                          </span>
-                          <span className="font-mono text-[10px] font-bold text-blue-400 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">
-                            ID #{String(article.no).padStart(2, '0')}
-                          </span>
-                        </div>
-                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${getCategoryBadgeClass(article.klasifikasi)}`}>
-                          {article.klasifikasi}
-                        </span>
-                      </div>
-                      
-                      <h3 className="font-bold text-white text-sm sm:text-base leading-snug line-clamp-2 group-hover:text-blue-300 transition">
-                        {article.judul}
-                      </h3>
-                      
-                      <div className="flex items-center text-xs text-slate-400 gap-1.5">
-                        <User className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
-                        <span className="truncate">{article.penulis}</span>
-                      </div>
-                      
-                      <p className="text-xs text-slate-300 line-clamp-3 leading-relaxed">
-                        {article.ringkasan}
-                      </p>
-                    </div>
-
-                    <div className="pt-3 border-t border-[#1e293b] flex items-center justify-between gap-2">
-                      <button
-                        onClick={() => setSelectedArticle(article)}
-                        className="text-xs font-semibold text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 transition"
-                      >
-                        Detail
-                      </button>
-                      <div className="flex items-center gap-1.5">
-                        <a
-                          href={article.aksesUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="px-2.5 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs font-semibold transition flex items-center gap-1 border border-blue-500/30"
-                          title="Buka Naskah OJS"
-                        >
-                          <span>OJS</span>
-                          <ExternalLink className="w-3 h-3" />
-                        </a>
-                        <a
-                          href={article.pdfUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="px-2.5 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold transition flex items-center gap-1 border border-emerald-500/30"
-                          title="Unduh PDF Langsung"
-                        >
-                          <span>PDF</span>
-                          <Download className="w-3 h-3" />
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-          </section>
-        )}
-
-        {/* =========================================================
-            VIEW 2: SEMUA ARTIKEL (TABLE & SIDEBAR KATEGORI)
-            ========================================================= */}
-        {activeTab === 'articles' && (
-          <section className="space-y-6 animate-in fade-in duration-200">
-            
-            {/* Section Header with Search & Controls */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#131b2e] border border-[#1e293b] p-5 rounded-2xl shadow-sm">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-bold text-white">Semua Naskah</h2>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono">
-                    {filteredArticles.length} / 46
-                  </span>
-                </div>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Daftar seluruh 46 naskah riset dosen & civitas akademika IAT Universitas Annuqayah
+              <div className="space-y-1">
+                <h1 className="font-serif font-extrabold text-xl sm:text-2xl md:text-3xl text-slate-900 tracking-tight leading-tight">
+                  Arsip Naskah Jurnal Studi Al-Qur'an dan Tafsir
+                </h1>
+                <p className="text-xs text-slate-500 max-w-lg mx-auto">
+                  Direktori 46 naskah riset Al-Qur'an, tafsir, living Qur'an, dan mufasir Universitas Annuqayah.
                 </p>
               </div>
 
-              {/* Search Bar & View Mode Toggle */}
-              <div className="flex items-center gap-2.5 w-full md:w-auto">
-                <div className="w-full md:w-80 relative">
-                  <Search className="w-3.5 h-3.5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+              {/* Search Bar */}
+              <div className="pt-1 max-w-xl mx-auto w-full">
+                <div className="relative group">
+                  <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#0F382C] transition" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Cari judul, penulis, ringkasan..."
-                    className="w-full bg-slate-900 border border-[#1e293b] rounded-xl pl-9 pr-8 py-2 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+                    placeholder="Cari judul artikel, penulis, atau kata kunci..."
+                    className="w-full bg-white border border-slate-200 group-hover:border-slate-300 rounded-xl pl-10 pr-9 py-2.5 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0F382C] focus:ring-3 focus:ring-[#0F382C]/10 transition shadow-2xs font-sans min-h-[42px]"
                   />
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery('')}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-1"
+                      aria-label="Bersihkan pencarian"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
                   )}
                 </div>
 
-                {/* View Mode Toggle (Table / Grid) */}
-                <div className="hidden sm:flex items-center bg-slate-900 border border-[#1e293b] p-1 rounded-xl">
-                  <button
-                    onClick={() => setViewMode('table')}
-                    className={`p-1.5 rounded-lg text-xs transition ${
-                      viewMode === 'table' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
-                    }`}
-                    title="Tampilan Tabel"
-                  >
-                    <TableIcon className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    onClick={() => setViewMode('grid')}
-                    className={`p-1.5 rounded-lg text-xs transition ${
-                      viewMode === 'grid' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
-                    }`}
-                    title="Tampilan Kartu"
-                  >
-                    <LayoutGrid className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Mobile Category Dropdown */}
-            <div className="block lg:hidden">
-              <label className="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">
-                Pilih Objek Kajian IAT:
-              </label>
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full bg-[#131b2e] border border-[#1e293b] text-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium focus:outline-none focus:border-blue-500"
-              >
-                {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat} ({categoryCounts[cat] ?? 0})
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Layout: Sidebar (Desktop) + Main Articles (Table or Grid) */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-              
-              {/* Left Sidebar Menu (Desktop) */}
-              <aside className="hidden lg:block lg:col-span-3 bg-[#131b2e] border border-[#1e293b] rounded-2xl p-4 sticky top-24 space-y-3 shadow-sm">
-                <div className="flex items-center justify-between pb-3 border-b border-[#1e293b]/80">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                    Objek Penelitian IAT
+                {/* Search Meta & Reset */}
+                <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1.5 px-1">
+                  <span>
+                    Menampilkan <strong className="text-slate-800">{filteredArticles.length}</strong> naskah
+                    {searchQuery && <span> untuk "<span className="text-[#0F382C] font-semibold">{searchQuery}</span>"</span>}
                   </span>
-                  {(selectedCategory !== 'Semua' || searchQuery) && (
+                  {isFiltered && (
                     <button
-                      onClick={() => {
-                        setSelectedCategory('Semua');
-                        setSearchQuery('');
-                      }}
-                      className="text-[11px] text-blue-400 hover:underline"
+                      onClick={resetFilters}
+                      className="text-[#0F382C] hover:text-[#185240] font-semibold flex items-center gap-1 hover:underline"
                     >
-                      Reset
+                      <RotateCcw className="w-3 h-3" />
+                      <span>Reset Filter</span>
                     </button>
                   )}
                 </div>
+              </div>
 
-                <div className="space-y-1">
-                  {CATEGORIES.map((cat) => {
+              {/* Horizontal Scrollable Category Pills on Mobile */}
+              <div className="pt-1">
+                <div className="flex items-center overflow-x-auto no-scrollbar gap-1.5 pb-1 px-0.5 sm:flex-wrap sm:justify-center">
+                  {FILTER_CATEGORIES.map((cat) => {
                     const isSelected = selectedCategory === cat;
+                    const count = categoryCounts[cat] || 0;
                     return (
                       <button
                         key={cat}
                         onClick={() => setSelectedCategory(cat)}
-                        className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition text-left ${
+                        className={`shrink-0 px-3 py-1.5 rounded-lg transition text-[11px] font-medium flex items-center gap-1.5 active:scale-95 cursor-pointer ${
                           isSelected
-                            ? 'bg-blue-600/15 text-blue-400 border border-blue-500/30 font-semibold'
-                            : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
+                            ? 'bg-[#0F382C] text-white shadow-2xs ring-1 ring-[#0F382C]/15 font-semibold'
+                            : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                         }`}
                       >
-                        <span className="truncate pr-2">{cat}</span>
-                        <span
-                          className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-semibold ${
-                            isSelected
-                              ? 'bg-blue-500/30 text-blue-300'
-                              : 'bg-slate-800 text-slate-400'
+                        <span>{cat}</span>
+                        <span 
+                          className={`text-[9px] px-1 py-0.2 rounded-full font-mono ${
+                            isSelected 
+                              ? 'bg-white/20 text-white' 
+                              : 'bg-slate-100 text-slate-600'
                           }`}
                         >
-                          {categoryCounts[cat]}
+                          {count}
                         </span>
                       </button>
                     );
                   })}
                 </div>
-              </aside>
+              </div>
 
-              {/* Right Main Content */}
-              <div className="lg:col-span-9">
-                {filteredArticles.length === 0 ? (
-                  <div className="bg-[#131b2e] border border-[#1e293b] rounded-2xl p-12 text-center space-y-3 shadow-sm">
-                    <BookOpen className="w-10 h-10 text-slate-500 mx-auto" />
-                    <h3 className="font-bold text-white text-base">Tidak ada naskah yang cocok</h3>
-                    <p className="text-xs text-slate-400 max-w-sm mx-auto">
-                      Coba ubah kata kunci pencarian atau pilih objek penelitian lain untuk menampilkan naskah.
-                    </p>
-                    <button
-                      onClick={() => {
-                        setSelectedCategory('Semua');
-                        setSearchQuery('');
-                      }}
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-xl transition"
-                    >
-                      Reset Pencarian & Kategori
-                    </button>
-                  </div>
-                ) : viewMode === 'table' ? (
-                  /* TABLE VIEW: Nomor Dinamis (index + 1) & Badge ID Naskah */
-                  <div className="bg-[#131b2e] border border-[#1e293b] rounded-2xl overflow-hidden shadow-sm">
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left border-collapse">
-                        <thead>
-                          <tr className="border-b border-[#1e293b] bg-slate-900/70 text-slate-400 text-xs uppercase tracking-wider font-semibold">
-                            <th className="p-4 w-14 text-center">No</th>
-                            <th className="p-4 w-36">Objek Kajian</th>
-                            <th className="p-4">Judul Artikel & Penulis</th>
-                            <th className="p-4 min-w-[260px]">Inti Kajian / Abstrak</th>
-                            <th className="p-4 w-36 text-center">Aksi Naskah</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-[#1e293b]/60">
-                          {filteredArticles.map((article, index) => (
-                            <tr
-                              key={article.no}
-                              className="hover:bg-[#18223a]/70 transition group"
-                            >
-                              {/* 1. PENOMORAN DINAMIS: index + 1 */}
-                              <td className="p-4 text-center font-mono text-xs font-bold text-slate-300">
-                                {index + 1}
-                              </td>
+              {/* Volume Filter Dropdown */}
+              <div className="flex items-center justify-center gap-2 pt-0.5 text-xs text-slate-600">
+                <span className="flex items-center gap-1 text-[11px] text-slate-500">
+                  <Calendar className="w-3 h-3 text-slate-400" />
+                  <span>Edisi Terbitan:</span>
+                </span>
+                <select
+                  value={selectedVolume}
+                  onChange={(e) => setSelectedVolume(e.target.value)}
+                  className="bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-xs font-semibold text-slate-800 hover:border-slate-300 focus:outline-none focus:border-[#0F382C] shadow-2xs cursor-pointer"
+                >
+                  {VOLUMES.map((v) => (
+                    <option key={v} value={v}>{v}</option>
+                  ))}
+                </select>
+              </div>
 
-                              <td className="p-4">
-                                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border whitespace-nowrap ${getCategoryBadgeClass(article.klasifikasi)}`}>
-                                  {article.klasifikasi}
-                                </span>
-                              </td>
+            </section>
 
-                              <td className="p-4">
-                                {/* 2. PINDAHKAN ID ASLI ARTIKEL MENJADI BADGE ID */}
-                                <div className="flex items-center gap-1.5 mb-1.5">
-                                  <span className="font-mono text-[10px] font-bold text-blue-400/90 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">
-                                    ID #{String(article.no).padStart(2, '0')}
-                                  </span>
-                                </div>
-
-                                <button
-                                  onClick={() => setSelectedArticle(article)}
-                                  className="text-left font-bold text-sm text-slate-100 group-hover:text-blue-300 transition line-clamp-2 block"
-                                >
-                                  {article.judul}
-                                </button>
-                                <div className="text-xs text-slate-400 flex items-center gap-1.5 mt-1">
-                                  <User className="w-3 h-3 text-slate-500 flex-shrink-0" />
-                                  <span className="truncate">{article.penulis}</span>
-                                </div>
-                              </td>
-
-                              <td className="p-4 text-xs text-slate-300 line-clamp-3 leading-relaxed">
-                                {article.ringkasan}
-                              </td>
-
-                              <td className="p-4 text-center">
-                                <div className="flex items-center justify-center gap-1.5">
-                                  <button
-                                    onClick={() => setSelectedArticle(article)}
-                                    className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs transition"
-                                    title="Detail Lengkap"
-                                  >
-                                    <BookOpen className="w-3.5 h-3.5" />
-                                  </button>
-                                  <a
-                                    href={article.aksesUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-2 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs font-semibold transition flex items-center gap-1 border border-blue-500/30"
-                                    title="Akses OJS"
-                                  >
-                                    <span>OJS</span>
-                                    <ExternalLink className="w-3 h-3" />
-                                  </a>
-                                  <a
-                                    href={article.pdfUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-2 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold transition flex items-center gap-1 border border-emerald-500/30"
-                                    title="Download PDF"
-                                  >
-                                    <Download className="w-3.5 h-3.5" />
-                                  </a>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                ) : (
-                  /* CARD GRID VIEW: Nomor Dinamis (index + 1) & Badge ID Naskah */
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {filteredArticles.map((article, index) => (
-                      <div
+            {/* =========================================================
+                ARTICLE GRID (2 COLUMNS DESKTOP, 1 COLUMN MOBILE)
+                ========================================================= */}
+            <section className="pt-2">
+              {filteredArticles.length === 0 ? (
+                <div className="bg-white border border-slate-200 rounded-xl p-8 sm:p-10 text-center space-y-2 shadow-2xs">
+                  <h3 className="font-serif font-bold text-base text-slate-900">
+                    Tidak ditemukan naskah yang cocok
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    Silakan ubah filter atau kata kunci pencarian.
+                  </p>
+                  <button
+                    onClick={resetFilters}
+                    className="mt-2 inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#0F382C] text-white text-xs font-semibold rounded-lg hover:bg-[#185240] transition shadow-2xs"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    <span>Tampilkan Semua Naskah</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
+                  {filteredArticles.map((article, idx) => {
+                    const isExpanded = !!expandedAbstracts[article.no];
+                    return (
+                      <article
                         key={article.no}
-                        className="bg-[#131b2e] hover:bg-[#18223a] border border-[#1e293b] hover:border-blue-500/40 p-5 rounded-2xl transition duration-200 flex flex-col justify-between space-y-4 group shadow-sm"
+                        className="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-4.5 transition-all duration-200 hover:border-emerald-600/40 hover:shadow-md flex flex-col justify-between group space-y-2.5"
                       >
-                        <div className="space-y-3">
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-1.5">
-                              {/* Nomor Dinamis */}
-                              <span className="font-mono text-xs font-bold text-slate-300 bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-700">
-                                {index + 1}
+                        <div className="space-y-2">
+                          {/* Header Card: Category Badge + Vol/No & Halaman */}
+                          <div className="flex items-center justify-between gap-1.5 text-xs">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className="font-mono font-bold text-[11px] px-1.5 py-0.2 rounded bg-slate-900 text-white shadow-2xs">
+                                #{idx + 1}
                               </span>
-                              {/* Badge ID Naskah */}
-                              <span className="font-mono text-[10px] font-bold text-blue-400/90 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">
-                                ID #{String(article.no).padStart(2, '0')}
+                              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${getCategoryBadgeClass(article.klasifikasi)}`}>
+                                {article.klasifikasi}
                               </span>
                             </div>
-                            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${getCategoryBadgeClass(article.klasifikasi)}`}>
-                              {article.klasifikasi}
+                            <span className="text-[10px] font-mono text-slate-500 shrink-0">
+                              {article.volume.split('(')[0].trim()} · {article.halaman}
                             </span>
                           </div>
 
-                          <h3
+                          {/* Judul Artikel: Serif Font, ringkas & tegas, max 2-3 baris */}
+                          <h2
                             onClick={() => setSelectedArticle(article)}
-                            className="font-bold text-white text-sm sm:text-base leading-snug line-clamp-2 group-hover:text-blue-300 transition cursor-pointer"
+                            className="font-serif font-bold text-sm sm:text-base text-slate-900 group-hover:text-[#0F382C] transition-colors leading-snug line-clamp-2 sm:line-clamp-3 cursor-pointer pt-0.5"
+                            title={article.judul}
                           >
                             {article.judul}
-                          </h3>
+                          </h2>
 
-                          <div className="flex items-center text-xs text-slate-400 gap-1.5">
-                            <User className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
+                          {/* Nama Penulis: Muted text */}
+                          <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+                            <User className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                             <span className="truncate">{article.penulis}</span>
                           </div>
 
-                          <p className="text-xs text-slate-300 line-clamp-3 leading-relaxed">
-                            {article.ringkasan}
-                          </p>
+                          {/* Ringkasan/Abstrak: 1 baris singkat dengan opsi toggle accordion */}
+                          <div className="text-xs text-slate-600 leading-relaxed bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                            <p className={isExpanded ? '' : 'line-clamp-1'}>
+                              {article.ringkasan}
+                            </p>
+                            <button
+                              onClick={() => toggleAbstract(article.no)}
+                              className="text-[10px] font-semibold text-[#0F382C] mt-1 hover:underline inline-flex items-center gap-0.5 cursor-pointer"
+                            >
+                              <span>{isExpanded ? 'Tutup Abstrak' : 'Tampilkan Abstrak'}</span>
+                              <ChevronDown className={`w-3 h-3 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                            </button>
+                          </div>
                         </div>
 
-                        <div className="pt-3 border-t border-[#1e293b] flex items-center justify-between gap-2">
-                          <button
-                            onClick={() => setSelectedArticle(article)}
-                            className="text-xs font-semibold text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 transition"
-                          >
-                            Detail Naskah
-                          </button>
-                          <div className="flex items-center gap-1.5">
+                        {/* Footer Card: Tombol 'Unduh PDF' (Aksen Hijau) & 'Detail / OJS' (Outlined/Text) */}
+                        <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2 text-xs mt-auto">
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => setSelectedArticle(article)}
+                              className="px-2.5 py-1.5 font-semibold text-[#0F382C] hover:bg-emerald-50 rounded-lg transition flex items-center gap-1"
+                            >
+                              <span>Detail & Sitasi</span>
+                              <ChevronRight className="w-3 h-3" />
+                            </button>
                             <a
                               href={article.aksesUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="px-2.5 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs font-semibold transition flex items-center gap-1 border border-blue-500/30"
+                              className="px-2 py-1.5 text-slate-500 hover:text-slate-800 rounded-lg transition hover:bg-slate-50 flex items-center gap-1"
+                              title="Buka naskah di OJS"
                             >
                               <span>OJS</span>
-                              <ExternalLink className="w-3 h-3" />
-                            </a>
-                            <a
-                              href={article.pdfUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="px-2.5 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold transition flex items-center gap-1 border border-emerald-500/30"
-                            >
-                              <span>PDF</span>
-                              <Download className="w-3 h-3" />
+                              <ExternalLink className="w-3 h-3 text-slate-400" />
                             </a>
                           </div>
+
+                          <a
+                            href={article.pdfUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-3 py-1.5 rounded-lg bg-[#0F382C] hover:bg-[#185240] text-white font-medium flex items-center gap-1.5 transition shadow-2xs active:scale-95"
+                            title="Unduh PDF"
+                          >
+                            <Download className="w-3.5 h-3.5 text-emerald-200" />
+                            <span>Unduh PDF</span>
+                          </a>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
 
-            </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
 
-          </section>
+          </div>
         )}
 
         {/* =========================================================
-            VIEW 3: TENTANG (ABOUT & 4 OBJEK PENELITIAN IAT)
+            TAB 2: TENTANG JURNAL & 4 OBJEK PENELITIAN IAT
             ========================================================= */}
-        {activeTab === 'about' && (
-          <section className="space-y-6 animate-in fade-in duration-200">
-            <div className="bg-[#131b2e] border border-[#1e293b] p-6 sm:p-10 rounded-3xl max-w-3xl mx-auto space-y-8 shadow-xl">
-              
-              {/* Profile Header */}
-              <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-5 border-b border-[#1e293b] pb-8 text-center sm:text-left">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-600/20 to-indigo-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-3xl font-bold shadow-inner flex-shrink-0">
-                  <GraduationCap className="w-10 h-10" />
-                </div>
-                <div className="space-y-1.5">
-                  <h2 className="text-2xl font-extrabold text-white">
-                    Direktori & Arsip Jurnal Studi Al-Qur'an dan Tafsir (JSQT)
+        {activeTab === 'tentang' && (
+          <div className="space-y-6 animate-in fade-in duration-150 max-w-4xl mx-auto">
+            <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-7 space-y-5 shadow-2xs">
+              <div className="space-y-1">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60">
+                  Profil Jurnal
+                </span>
+                <h1 className="font-serif font-bold text-xl sm:text-2xl text-slate-900 pt-1">
+                  Tentang Jurnal Studi Al-Qur'an dan Tafsir (JSQT)
+                </h1>
+                <p className="text-xs text-slate-500 font-medium">
+                  Program Studi Ilmu Al-Qur'an dan Tafsir (IAT) · Universitas Annuqayah
+                </p>
+              </div>
+
+              <div className="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-4 border-t border-slate-100 pt-4">
+                <p>
+                  <strong>Jurnal Studi Al-Qur'an dan Tafsir (JSQT)</strong> adalah media publikasi ilmiah berkala peer-reviewed yang memuat naskah orisinal riset Al-Qur'an dan Tafsir.
+                </p>
+
+                <div className="space-y-2.5 pt-1">
+                  <h2 className="font-serif font-bold text-sm text-[#0F382C] flex items-center gap-1.5">
+                    <BookOpen className="w-4 h-4 text-emerald-700" />
+                    <span>4 Objek Penelitian Utama IAT:</span>
                   </h2>
-                  <p className="text-xs sm:text-sm font-semibold text-blue-400">
-                    Program Studi Ilmu Al-Qur'an dan Tafsir (IAT) • Universitas Annuqayah • 2026
-                  </p>
-                  <p className="text-xs text-slate-400">
-                    Platform penelusuran naskah ilmiah berbasis 4 Objek Penelitian IAT sebagai sarana eksplorasi riset dosen & civitas akademika
-                  </p>
-                </div>
-              </div>
 
-              {/* Narrative Content: 4 Objek Penelitian IAT */}
-              <div className="space-y-6 text-slate-300 text-sm sm:text-base leading-relaxed">
-                
-                <p>
-                  <strong className="text-white">Direktori & Arsip JSQT</strong> dirancang sebagai sarana eksplorasi riset dosen & civitas akademika Program Studi Ilmu Al-Qur'an dan Tafsir (IAT) Universitas Annuqayah dalam memetakan, meneliti, dan mengembangkan khazanah keilmuan Al-Qur’an secara terstruktur, komprehensif, dan terbuka.
-                </p>
-
-                {/* 4 Pilar Objek Penelitian IAT (Sesuai Dokumen Resmi) */}
-                <div className="p-5 rounded-2xl bg-slate-900/80 border border-[#1e293b] space-y-4">
-                  <div className="flex items-center justify-between border-b border-[#1e293b] pb-3">
-                    <h3 className="font-bold text-white text-sm uppercase tracking-wider flex items-center gap-2">
-                      <Layers className="w-4 h-4 text-blue-400" />
-                      4 Objek Penelitian Ilmu Al-Qur’an dan Tafsir (IAT)
-                    </h3>
-                    <span className="text-[11px] text-blue-400 font-mono font-semibold">Objek Riset IAT</span>
-                  </div>
-
-                  <div className="space-y-4 text-xs sm:text-sm">
-                    {/* 1. Studi Internal Teks */}
-                    <div className="p-3.5 rounded-xl bg-[#131b2e]/60 border border-emerald-500/20 space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-bold text-emerald-400 text-sm flex items-center gap-2">
-                          <span>1. Studi Internal Teks</span>
-                          <span className="text-slate-400 font-serif italic text-xs">(دراسة ما في القرآن نفسه)</span>
-                        </h4>
-                      </div>
-                      <p className="text-slate-300">
-                        Penelitian yang berfokus langsung pada ayat Al-Qur’an. Ayat Al-Qur'an menjadi objek kajian secara langsung.
-                      </p>
-                      <p className="text-[11px] text-slate-400 font-mono bg-slate-900/60 p-2 rounded-lg">
-                        <strong>Alur Penelitian:</strong> Membaca ayat Al-Qur’an → Memahami ayat → Mencari penafsiran dari berbagai kitab tafsir → Membandingkan penafsiran → Menyusun tesis/argumentasi → Menarik kesimpulan.
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="p-3.5 rounded-lg border border-emerald-100 bg-emerald-50/40 space-y-1">
+                      <strong className="block text-xs font-semibold text-emerald-900">
+                        1. Studi Internal Teks
+                      </strong>
+                      <p className="text-slate-600 text-xs">
+                        Kajian redaksi ayat, semantika bahasa, dan tafsir tematik (maudhu'i).
                       </p>
                     </div>
 
-                    {/* 2. Studi Eksternal Teks */}
-                    <div className="p-3.5 rounded-xl bg-[#131b2e]/60 border border-amber-500/20 space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-bold text-amber-400 text-sm flex items-center gap-2">
-                          <span>2. Studi Eksternal Teks</span>
-                          <span className="text-slate-400 font-serif italic text-xs">(دراسة ما حول القرآن)</span>
-                        </h4>
-                      </div>
-                      <p className="text-slate-300">
-                        Penelitian yang berfokus pada ilmu-ilmu yang berkaitan dengan Al-Qur’an atau ilmu-ilmu yang menjadi alat untuk memahami Al-Qur’an. Fokus utamanya adalah <em>Ulumul Qur’an</em> (علوم القرآن).
-                      </p>
-                      <p className="text-[11px] text-slate-400">
-                        Contohnya kajian <em>asbāb al-nuzūl</em> (sebab-sebab turunnya ayat), dengan kitab rujukan utama seperti <em>Lubāb al-Nuqūl fī Asbāb al-Nuzūl</em> karya Imam Jalaluddin as-Suyuthi.
+                    <div className="p-3.5 rounded-lg border border-sky-100 bg-sky-50/40 space-y-1">
+                      <strong className="block text-xs font-semibold text-sky-900">
+                        2. Studi Eksternal Teks
+                      </strong>
+                      <p className="text-slate-600 text-xs">
+                        Konteks historis wahyu, asbāb an-nuzūl, qira'at, dan Ulumul Qur'an.
                       </p>
                     </div>
 
-                    {/* 3. Studi Tokoh */}
-                    <div className="p-3.5 rounded-xl bg-[#131b2e]/60 border border-blue-500/20 space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-bold text-blue-400 text-sm flex items-center gap-2">
-                          <span>3. Studi Tokoh / Mufasir</span>
-                          <span className="text-slate-400 font-serif italic text-xs">(دراسة مفسر القرآن)</span>
-                        </h4>
-                      </div>
-                      <p className="text-slate-300">
-                        Penelitian yang berfokus pada pendapat, pandangan, atau pernyataan seorang tokoh, khususnya mufasir Al-Qur’an, yang mencakup dua aspek:
+                    <div className="p-3.5 rounded-lg border border-indigo-100 bg-indigo-50/40 space-y-1">
+                      <strong className="block text-xs font-semibold text-indigo-900">
+                        3. Studi Tokoh / Mufasir
+                      </strong>
+                      <p className="text-slate-600 text-xs">
+                        Biografi, corak, epistemologi, dan metodologi kitab-kitab tafsir.
                       </p>
-                      <ul className="text-slate-400 text-xs list-disc list-inside space-y-1 pl-1">
-                        <li><strong className="text-slate-200">Internal teks:</strong> Pendapat atau pandangan tokoh dalam menafsirkan ayat-ayat Al-Qur’an.</li>
-                        <li><strong className="text-slate-200">Eksternal teks:</strong> Latar belakang tokoh, lingkungan, pendidikan, serta hal-hal yang memengaruhi pemikirannya.</li>
-                      </ul>
                     </div>
 
-                    {/* 4. Studi Living Qur'an */}
-                    <div className="p-3.5 rounded-xl bg-[#131b2e]/60 border border-purple-500/20 space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-bold text-purple-400 text-sm flex items-center gap-2">
-                          <span>4. Studi Living Qur’an</span>
-                          <span className="text-slate-400 font-serif italic text-xs">(دراسة القرآن الحي)</span>
-                        </h4>
-                      </div>
-                      <p className="text-slate-300">
-                        Kajian tentang bagaimana Al-Qur’an diterima, diperlakukan, dipahami, dan dipraktikkan dalam kehidupan masyarakat (المعايشة / interaksi sehari-hari bersama Al-Qur'an), mencakup 3 bentuk resepsi:
+                    <div className="p-3.5 rounded-lg border border-teal-100 bg-teal-50/40 space-y-1">
+                      <strong className="block text-xs font-semibold text-teal-900">
+                        4. Studi Living Qur'an
+                      </strong>
+                      <p className="text-slate-600 text-xs">
+                        Resepsi dan praktik sosial Al-Qur'an dalam kehidupan masyarakat.
                       </p>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-[11px]">
-                        <div className="bg-slate-900/60 p-2 rounded-lg">
-                          <strong className="text-purple-300 block">a. Resepsi Eksegesis</strong>
-                          Pemahaman, pengajaran, dan penafsiran ayat dalam pembelajaran atau pengajian.
-                        </div>
-                        <div className="bg-slate-900/60 p-2 rounded-lg">
-                          <strong className="text-purple-300 block">b. Resepsi Estetis</strong>
-                          Aspek keindahan bacaan (seni tilawah) dan seni kaligrafi ayat Al-Qur’an.
-                        </div>
-                        <div className="bg-slate-900/60 p-2 rounded-lg">
-                          <strong className="text-purple-300 block">c. Resepsi Fungsional</strong>
-                          Praktik pembacaan ayat/surat tertentu untuk tujuan fungsional, kemanfaatan, atau perlindungan.
-                        </div>
-                      </div>
                     </div>
-
                   </div>
                 </div>
 
-                {/* Open Access Commitment */}
-                <p>
-                  Seluruh 46 naskah ilmiah dalam arsip ini disajikan secara terbuka (*Open Access*) dengan tautan naskah utuh langsung ke sistem resmi OJS dan berkas PDF orisinal, mendorong diseminasi riset ilmiah Al-Qur'an dan Tafsir di Nusantara.
-                </p>
+                <div className="pt-3 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <span className="text-slate-400 block font-medium text-[11px]">ISSN Resmi:</span>
+                    <p className="font-semibold text-slate-800">p-ISSN: 2775-4383 | e-ISSN: 2775-4391</p>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block font-medium text-[11px]">Penerbit:</span>
+                    <p className="text-slate-800">Universitas Annuqayah, Sumenep, Madura</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
+        {/* =========================================================
+            TAB 3: PETUNJUK PENULIS (GUIDELINES)
+            ========================================================= */}
+        {activeTab === 'petunjuk' && (
+          <div className="space-y-6 animate-in fade-in duration-150 max-w-4xl mx-auto">
+            <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-7 space-y-5 shadow-2xs">
+              <div>
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60">
+                  Panduan Naskah
+                </span>
+                <h1 className="font-serif font-bold text-xl sm:text-2xl text-slate-900 pt-1">
+                  Petunjuk Penulisan Naskah
+                </h1>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Pedoman ringkas submit artikel ke JSQT Universitas Annuqayah
+                </p>
               </div>
 
-              {/* Attribution Banner in About */}
-              <div className="p-4 rounded-2xl bg-blue-950/30 border border-blue-500/30 text-xs text-slate-300 space-y-1">
-                <span className="font-bold text-blue-400 uppercase tracking-wider block">Sumber Repositori Resmi:</span>
-                <p>
-                  Seluruh naskah ilmiah bersumber dari portal resmi Jurnal Studi Al-Qur'an dan Tafsir (JSQT) Universitas Annuqayah:{' '}
+              <div className="space-y-3.5 text-xs sm:text-sm text-slate-700 leading-relaxed border-t border-slate-100 pt-4">
+                <p>1. Naskah merupakan hasil penelitian orisinal yang belum pernah dipublikasikan.</p>
+                <p>2. Panjang artikel berkisar antara 5.000–8.000 kata termasuk abstrak dan referensi.</p>
+                <p>3. Format rujukan menggunakan Footnote berstandar <em>Chicago Manual of Style 17th Edition</em>.</p>
+
+                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-900 font-medium">
+                  <strong>Bebas Biaya Publikasi:</strong> JSQT tidak mengenakan biaya pendaftaran naskah maupun penerbitan (APC Free).
+                </div>
+
+                <div className="pt-2">
                   <a
-                    href="https://journal.ua.ac.id/index.php/jsqt/issue/archive"
+                    href="https://journal.ua.ac.id/index.php/jsqt/submission/wizard"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-400 hover:text-blue-300 underline font-semibold break-all"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#0F382C] text-white text-xs font-semibold hover:bg-[#185240] transition shadow-2xs active:scale-95"
                   >
-                    https://journal.ua.ac.id/index.php/jsqt/issue/archive
+                    <FileCheck2 className="w-3.5 h-3.5 text-emerald-200" />
+                    <span>Submit Naskah di Portal OJS</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
                   </a>
-                </p>
+                </div>
               </div>
-
-              {/* Signature Footer */}
-              <div className="pt-6 border-t border-[#1e293b]/80 text-center space-y-1">
-                <p className="text-base font-extrabold tracking-wide text-white italic">
-                  "Iqra' bismi Rabbikalladzi khalaq"
-                </p>
-                <p className="text-xs text-slate-400">
-                  Civitas Akademika Ilmu Al-Qur'an dan Tafsir (IAT) • Universitas Annuqayah
-                </p>
-              </div>
-
             </div>
-          </section>
+          </div>
         )}
-
-        {/* =========================================================
-            GLOBAL FOOTER (ATRIBUSI RESMI SUMBER JSQT UNIVERSITAS ANNUQAYAH)
-            ========================================================= */}
-        <footer className="pt-8 pb-4 border-t border-[#1e293b] text-center space-y-2">
-          <p className="text-xs text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            Seluruh naskah ilmiah bersumber dari portal resmi Jurnal Studi Al-Qur'an dan Tafsir (JSQT) Universitas Annuqayah:{' '}
-            <a
-              href="https://journal.ua.ac.id/index.php/jsqt/issue/archive"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-400 hover:text-blue-300 underline font-medium inline-flex items-center gap-1"
-            >
-              <span>https://journal.ua.ac.id/index.php/jsqt/issue/archive</span>
-              <ExternalLink className="w-3 h-3 inline" />
-            </a>
-          </p>
-          <p className="text-[11px] text-slate-500">
-            Direktori Riset & Repositori Digital Civitas Akademika Ilmu Al-Qur'an dan Tafsir (IAT) Universitas Annuqayah • 2026
-          </p>
-        </footer>
 
       </main>
 
-      {/* ARTICLE DETAIL MODAL */}
+      {/* =========================================================
+          ARTICLE DETAIL & CITATION MODAL
+          ========================================================= */}
       {selectedArticle && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#131b2e] border border-[#1e293b] rounded-3xl max-w-xl w-full p-6 sm:p-7 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white border border-slate-200 rounded-2xl max-w-xl w-full p-5 sm:p-6 space-y-4 shadow-2xl max-h-[88vh] overflow-y-auto animate-in zoom-in-95 duration-150">
             
-            <div className="flex justify-between items-start border-b border-[#1e293b] pb-4">
-              <div className="space-y-1 pr-4">
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs font-bold text-blue-400/90 bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/20">
-                    Badge ID #{String(selectedArticle.no).padStart(2, '0')}
-                  </span>
+            {/* Modal Header */}
+            <div className="flex justify-between items-start border-b border-slate-100 pb-3 gap-2">
+              <div className="space-y-1 pr-2">
+                <div className="flex flex-wrap items-center gap-1.5">
                   <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${getCategoryBadgeClass(selectedArticle.klasifikasi)}`}>
                     {selectedArticle.klasifikasi}
                   </span>
+                  <span className="text-[11px] font-mono text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
+                    {selectedArticle.volume}
+                  </span>
                 </div>
-                <h3 className="font-bold text-base sm:text-lg text-white leading-snug pt-1">
+                <h2 className="font-serif font-bold text-base sm:text-lg text-slate-900 leading-snug pt-1">
                   {selectedArticle.judul}
-                </h3>
+                </h2>
               </div>
               <button
                 onClick={() => setSelectedArticle(null)}
-                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition"
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 flex items-center justify-center transition shrink-0"
+                aria-label="Tutup Modal"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="space-y-4 text-xs sm:text-sm">
+            {/* Modal Content */}
+            <div className="space-y-3.5 text-xs sm:text-sm">
               <div>
-                <span className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
-                  Penulis Naskah:
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                  Penulis:
                 </span>
-                <p className="text-white font-medium flex items-center gap-2">
-                  <User className="w-4 h-4 text-blue-400" />
-                  {selectedArticle.penulis}
+                <p className="font-semibold text-slate-800 mt-0.5 flex items-center gap-1.5">
+                  <User className="w-3.5 h-3.5 text-emerald-800 shrink-0" />
+                  <span>{selectedArticle.penulis}</span>
                 </p>
               </div>
 
               <div>
-                <span className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
-                  Ringkasan / Abstrak Naskah:
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                  Abstrak / Ringkasan:
                 </span>
-                <div className="p-3.5 rounded-xl bg-slate-900 border border-[#1e293b] text-slate-200 leading-relaxed text-xs sm:text-sm">
+                <div className="text-slate-700 leading-relaxed mt-1 text-xs bg-slate-50 p-3 rounded-lg border border-slate-100">
                   {selectedArticle.ringkasan}
                 </div>
               </div>
 
-              <div>
-                <span className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                  <span className="text-[9px] uppercase font-bold text-slate-400 block">Halaman & Terbitan</span>
+                  <p className="font-medium text-slate-800 text-xs mt-0.5">{selectedArticle.volume.split('(')[0]} · {selectedArticle.halaman}</p>
+                </div>
+                <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                  <span className="text-[9px] uppercase font-bold text-slate-400 block">Identifier / DOI</span>
+                  <p className="font-mono text-emerald-800 text-xs mt-0.5 truncate">{selectedArticle.doi}</p>
+                </div>
+              </div>
+
+              {/* 1-Click Citation */}
+              <div className="pt-2 border-t border-slate-100 space-y-1.5">
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
                   Salin Sitasi Cepat:
                 </span>
-                <div className="flex items-center gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                   <button
                     onClick={() => copyCitation(selectedArticle, 'apa')}
-                    className="flex-1 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 font-medium transition flex items-center justify-center gap-1.5 border border-[#1e293b]"
+                    className="min-h-[36px] px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg transition flex items-center justify-center gap-1 active:scale-95"
                   >
-                    {copiedType === 'apa' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-blue-400" />}
-                    <span>Format APA</span>
+                    {copiedFormat === 'apa' ? <Check className="w-3 h-3 text-emerald-700" /> : <Copy className="w-3 h-3 text-slate-500" />}
+                    <span>APA 7th</span>
                   </button>
+
                   <button
                     onClick={() => copyCitation(selectedArticle, 'chicago')}
-                    className="flex-1 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 font-medium transition flex items-center justify-center gap-1.5 border border-[#1e293b]"
+                    className="min-h-[36px] px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg transition flex items-center justify-center gap-1 active:scale-95"
                   >
-                    {copiedType === 'chicago' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-blue-400" />}
-                    <span>Format Chicago</span>
+                    {copiedFormat === 'chicago' ? <Check className="w-3 h-3 text-emerald-700" /> : <Copy className="w-3 h-3 text-slate-500" />}
+                    <span>Chicago</span>
+                  </button>
+
+                  <button
+                    onClick={() => copyCitation(selectedArticle, 'harvard')}
+                    className="min-h-[36px] px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg transition flex items-center justify-center gap-1 active:scale-95"
+                  >
+                    {copiedFormat === 'harvard' ? <Check className="w-3 h-3 text-emerald-700" /> : <Copy className="w-3 h-3 text-slate-500" />}
+                    <span>Harvard</span>
+                  </button>
+
+                  <button
+                    onClick={() => copyCitation(selectedArticle, 'bibtex')}
+                    className="min-h-[36px] px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg transition flex items-center justify-center gap-1 active:scale-95"
+                  >
+                    {copiedFormat === 'bibtex' ? <Check className="w-3 h-3 text-emerald-700" /> : <Copy className="w-3 h-3 text-slate-500" />}
+                    <span>BibTeX</span>
                   </button>
                 </div>
               </div>
+
             </div>
 
-            {/* Modal Actions */}
-            <div className="pt-4 border-t border-[#1e293b] flex flex-col sm:flex-row items-center justify-end gap-2.5">
+            {/* Modal Bottom Actions */}
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 text-xs">
               <a
                 href={selectedArticle.aksesUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs sm:text-sm font-semibold text-slate-200 rounded-xl transition flex items-center justify-center gap-2 border border-[#1e293b]"
+                className="min-h-[38px] px-3.5 py-1.5 border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-lg font-medium flex items-center gap-1.5 transition"
               >
-                <ExternalLink className="w-4 h-4 text-blue-400" />
-                <span>Buka Laman OJS</span>
+                <span>Buka di OJS</span>
+                <ExternalLink className="w-3 h-3 text-slate-400" />
               </a>
               <a
                 href={selectedArticle.pdfUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto px-5 py-2 bg-blue-600 hover:bg-blue-500 text-xs sm:text-sm font-semibold text-white rounded-xl transition shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2"
+                className="min-h-[38px] px-4 py-1.5 bg-[#0F382C] hover:bg-[#185240] text-white rounded-lg font-semibold flex items-center gap-1.5 shadow-2xs transition active:scale-95"
               >
-                <Download className="w-4 h-4" />
-                <span>Unduh PDF Naskah</span>
+                <Download className="w-3.5 h-3.5 text-emerald-200" />
+                <span>Unduh PDF</span>
               </a>
             </div>
 
@@ -1022,36 +859,48 @@ export default function App() {
         </div>
       )}
 
-      {/* MOBILE BOTTOM NAVIGATION BAR (Writely Style: Dashboard, Artikel, Tentang) */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#131b2e]/90 backdrop-blur-md border-t border-[#1e293b] z-40 px-3 py-2 flex justify-around items-center">
-        <button
-          onClick={() => setActiveTab('home')}
-          className={`flex flex-col items-center p-1 transition ${
-            activeTab === 'home' ? 'text-blue-400 font-semibold' : 'text-slate-400 font-normal hover:text-slate-200'
-          }`}
-        >
-          <LayoutDashboard className="w-5 h-5" />
-          <span className="text-[10px] mt-1">Dashboard</span>
-        </button>
-        <button
-          onClick={() => setActiveTab('articles')}
-          className={`flex flex-col items-center p-1 transition ${
-            activeTab === 'articles' ? 'text-blue-400 font-semibold' : 'text-slate-400 font-normal hover:text-slate-200'
-          }`}
-        >
-          <FileText className="w-5 h-5" />
-          <span className="text-[10px] mt-1">Artikel</span>
-        </button>
-        <button
-          onClick={() => setActiveTab('about')}
-          className={`flex flex-col items-center p-1 transition ${
-            activeTab === 'about' ? 'text-blue-400 font-semibold' : 'text-slate-400 font-normal hover:text-slate-200'
-          }`}
-        >
-          <Info className="w-5 h-5" />
-          <span className="text-[10px] mt-1">Tentang</span>
-        </button>
-      </nav>
+      {/* =========================================================
+          2. FOOTER (MINIMALIS 2 BARIS SESUAI SPESIFIKASI)
+          Logo + JSQT | ISSN: 2775-4383 (p) / 2775-4391 (e) | Portal Resmi OJS
+          Hak Cipta © 2026 Moh. Fadhailurrahman (Fadhail). All rights reserved.
+          ========================================================= */}
+      <footer className="bg-white border-t border-slate-200 mt-12 py-6 text-xs text-slate-600">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col items-center justify-center space-y-2 text-center">
+          
+          {/* Baris 1: Logo + JSQT | ISSN: 2775-4383 (p) / 2775-4391 (e) | Portal Resmi OJS */}
+          <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1.5 text-xs">
+            <div className="flex items-center gap-1.5">
+              <div className="relative w-5 h-5 rounded bg-gradient-to-br from-[#0F382C] to-[#0A261E] text-white flex items-center justify-center border border-emerald-700/40 shrink-0">
+                <svg className="w-3 h-3 text-emerald-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                </svg>
+              </div>
+              <span className="font-serif font-bold text-slate-900 tracking-tight">JSQT</span>
+            </div>
+            <span className="text-slate-300">|</span>
+            <span className="text-slate-600">
+              ISSN: <strong className="text-slate-800 font-mono">2775-4383</strong> (p) / <strong className="text-slate-800 font-mono">2775-4391</strong> (e)
+            </span>
+            <span className="text-slate-300">|</span>
+            <a 
+              href="https://journal.ua.ac.id/index.php/jsqt/issue/archive" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-[#0F382C] hover:text-[#185240] font-semibold underline underline-offset-2 flex items-center gap-1"
+            >
+              <span>Portal Resmi OJS</span>
+              <ExternalLink className="w-3 h-3 text-[#0F382C]" />
+            </a>
+          </div>
+
+          {/* Baris 2: Hak Cipta */}
+          <p className="text-[11px] text-slate-400">
+            Hak Cipta © 2026 Moh. Fadhailurrahman (Fadhail). All rights reserved.
+          </p>
+
+        </div>
+      </footer>
 
     </div>
   );

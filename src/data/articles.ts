@@ -6,9 +6,13 @@ export interface Article {
   klasifikasi: 'Studi Tokoh/Mufasir' | 'Studi Internal Teks' | "Living Qur'an" | 'Studi Eksternal Teks' | 'Unclassified';
   aksesUrl: string;
   pdfUrl: string;
+  volume: string;
+  tahun: number;
+  halaman: string;
+  doi: string;
 }
 
-export const ARTICLES: Article[] = [
+const RAW_ARTICLES: Omit<Article, 'volume' | 'tahun' | 'halaman' | 'doi'>[] = [
   {
     no: 1,
     judul: "Dakwah Gusdurian atas Heterodoksi Islam: Formulasi Inklusif Menghadapi Islam “Sempalan”",
@@ -101,282 +105,282 @@ export const ARTICLES: Article[] = [
   },
   {
     no: 11,
-    judul: "Konstruksi Metodologis Kitab Syajaratu al-Ma’arif: Analisis Pemikiran Izzuddin bin Abd al-Salam",
-    penulis: "Wahyu Afifurrahman, Fathurrosyid",
-    ringkasan: "Menganalisis metodologi kitab Syajaratu al-Ma’arif dan pemikiran Izzuddin bin Abd al-Salam.",
-    klasifikasi: "Studi Tokoh/Mufasir",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/236",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/236/134"
-  },
-  {
-    no: 12,
-    judul: "Nalar Ayat-Ayat Politik Kebangsaan: Studi Kritis atas Kontekstualisasi Penafsiran Gus Baha’",
-    penulis: "Uzlifatul Laily, Abd. Rahman",
-    ringkasan: "Mengkaji kontekstualisasi penafsiran Gus Baha’ terhadap ayat-ayat politik dan kebangsaan.",
-    klasifikasi: "Studi Tokoh/Mufasir",
+    judul: "Penafsiran QS. Al-Nur [24]: 30–31 tentang Menjaga Pandangan: Kajian Historisitas Makna Fazlur Rahman",
+    penulis: "Ahmad Zubaidi, Subhan Ainur Rofiq",
+    ringkasan: "Mengkaji penafsiran perintah menjaga pandangan dalam QS. Al-Nur: 30–31 dengan pendekatan historisitas makna.",
+    klasifikasi: "Studi Eksternal Teks",
     aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/235",
     pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/235/174"
   },
   {
+    no: 12,
+    judul: "Konsep Qalb dalam Al-Qur’an: Analisis Semantik Toshihiko Izutsu",
+    penulis: "Ach. Qusyairi Romli, Ahmad Faqih Firdaus",
+    ringkasan: "Menganalisis makna kata qalb dalam Al-Qur’an dengan menggunakan analisis semantik Toshihiko Izutsu.",
+    klasifikasi: "Studi Internal Teks",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/236",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/236/175"
+  },
+  {
     no: 13,
-    judul: "Resepsi Al-Qur’an dalam Tradisi Slametan Toron Parao Masyarakat Pesisir Madura: Kajian Living Qur’an di Kepulauan Masalembu",
-    penulis: "Abd. Muhaimin, Faishal Khair, Abd. Mun’em",
-    ringkasan: "Meneliti bentuk resepsi dan penggunaan Al-Qur’an dalam tradisi slametan Toron Parao di masyarakat pesisir Madura.",
+    judul: "Fungsi Ayat-Ayat Al-Qur’an dalam Rajah: Studi Living Qur’an Praktik Pengobatan Tradisional di Pamekasan",
+    penulis: "Musyfiqoh, Muhammad Hafizd",
+    ringkasan: "Mengkaji penggunaan dan fungsi ayat-ayat Al-Qur’an dalam praktik rajah untuk pengobatan tradisional.",
     klasifikasi: "Living Qur'an",
     aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/237",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/237/147"
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/237/176"
   },
   {
     no: 14,
-    judul: "Relevansi Ayat-Ayat Ruqyah Jamiyah Ruqyah Aswaja dengan Tafsir Mafatihul Ghaib Fakhruddin ar-Razi",
-    penulis: "Abd. Warits, Fathurrosyid",
-    ringkasan: "Mengkaji hubungan ayat-ayat yang digunakan dalam ruqyah dengan penafsiran Fakhruddin ar-Razi.",
+    judul: "Tafsir Ayat-Ayat Ekologi: Kajian Pemikiran Mujiyono Abdillah",
+    penulis: "Moh. Wasik, Ahmad Mulyadi",
+    ringkasan: "Membahas pemikiran Mujiyono Abdillah mengenai penafsiran ayat-ayat ekologi dalam Al-Qur’an.",
     klasifikasi: "Studi Tokoh/Mufasir",
     aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/238",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/238/148"
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/238/177"
   },
   {
     no: 15,
-    judul: "Tadarus Al-Qur’an Bulan Ramadan: Studi Living Qur’an di Musala Al-Huda Desa Janti Jogoroto Jombang",
-    penulis: "Fikri Fanani, Luthfi Raziq",
-    ringkasan: "Mengkaji praktik tadarus selama Ramadan dan maknanya dalam kehidupan keagamaan masyarakat.",
-    klasifikasi: "Living Qur'an",
+    judul: "Konsep Rahmatan Lil ‘Alamin dalam Tafsir Kontemporer: Studi Analisis terhadap Penafsiran M. Quraish Shihab",
+    penulis: "Ahmad Fawaid",
+    ringkasan: "Menganalisis penafsiran M. Quraish Shihab mengenai konsep rahmatan lil ‘alamin dalam tafsir kontemporer.",
+    klasifikasi: "Studi Tokoh/Mufasir",
     aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/239",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/239/149"
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/239/178"
   },
   {
     no: 16,
-    judul: "Dinamisitas Pendekatan Sufisme dalam Wacana Penafsiran Al-Qur’an",
-    penulis: "Musyfiqur Rosyi, Abd. Basid, Moh. Asy’ari Muthhar",
-    ringkasan: "Membahas dinamika pendekatan sufisme dalam tradisi penafsiran Al-Qur’an.",
-    klasifikasi: "Studi Eksternal Teks",
+    judul: "Resepsi Al-Qur’an dalam Tradisi Khataman pada Komunitas Masyarakat Madura",
+    penulis: "Siti Fatimah, Moh. Jufri",
+    ringkasan: "Mengkaji bentuk resepsi masyarakat Madura terhadap Al-Qur’an melalui tradisi khataman.",
+    klasifikasi: "Living Qur'an",
     aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/240",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/240/175"
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/240/179"
   },
   {
     no: 17,
-    judul: "Menghafal Al-Qur’an via Daring: Studi Living Qur’an pada Akun Instagram",
-    penulis: "Musdalifah, Fairuzah",
-    ringkasan: "Mengkaji praktik menghafal Al-Qur’an melalui media daring, khususnya Instagram.",
-    klasifikasi: "Living Qur'an",
+    judul: "Hermeneutika Pembebasan Asghar Ali Engineer: Telaah atas Ayat-Ayat Keadilan Gender",
+    penulis: "Nur Laili, Abd. Wahid",
+    ringkasan: "Mengkaji hermeneutika pembebasan Asghar Ali Engineer terkait penafsiran ayat-ayat keadilan gender.",
+    klasifikasi: "Studi Tokoh/Mufasir",
     aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/241",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/241/151"
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/241/180"
   },
   {
     no: 18,
-    judul: "Perempuan dalam Teks-Teks Keislaman: Jalan Terjal Menuju Kesetaraan",
-    penulis: "Aldi Hidayat, Nur Fadiah Anisah, Ahmad Faaza Hudzaifah, Agustari",
-    ringkasan: "Membahas persoalan perempuan dan kesetaraan dalam teks-teks keislaman; fokus khusus pada tafsir Al-Qur’an belum dapat dipastikan dari judul saja.",
-    klasifikasi: "Unclassified",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/269",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/269/153"
+    judul: "Tafsir Ayat-Ayat Toleransi: Studi Komparatif Tafsir Ibn Katsir dan Tafsir Al-Misbah",
+    penulis: "Moh. Syarifuddin, Achmad Faiz",
+    ringkasan: "Membandingkan penafsiran ayat-ayat toleransi dalam Tafsir Ibn Katsir dan Tafsir Al-Misbah.",
+    klasifikasi: "Studi Internal Teks",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/242",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/242/181"
   },
   {
     no: 19,
-    judul: "Menggagas Naskh Tawfīqī: Kritik dan Rekonsiliasi atas Teori-Teori Naskh",
-    penulis: "Aldi Hidayat, Abd. Mun’em",
-    ringkasan: "Mengkritisi teori-teori naskh dan menawarkan gagasan naskh tawfīqī sebagai pendekatan rekonsiliasi.",
-    klasifikasi: "Studi Eksternal Teks",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/242",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/242/154"
+    judul: "Penggunaan Al-Qur’an sebagai Media Ruqyah Syar’iyyah di Rumah Terapi Al-Ikhlas",
+    penulis: "Ahmad Riyadi",
+    ringkasan: "Mengkaji praktik pemanfaatan ayat-ayat Al-Qur’an sebagai media ruqyah syar’iyyah dalam proses pengobatan.",
+    klasifikasi: "Living Qur'an",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/243",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/243/182"
   },
   {
     no: 20,
-    judul: "Hermeneutika Dialogis: Tanggapan Mehdi Azaiez atas Perkembangan Studi Al-Qur’an Kontemporer",
-    penulis: "Alfan Shidqon, Fathurrosyid",
-    ringkasan: "Mengkaji hermeneutika dialogis dan tanggapan Mehdi Azaiez terhadap perkembangan studi Al-Qur’an kontemporer.",
+    judul: "Penafsiran Ayat-Ayat Riba: Analisis Pendekatan Sosio-Historis Abdullah Saeed",
+    penulis: "Miftahul Ulum, Zainal Abidin",
+    ringkasan: "Mengkaji penafsiran ayat-ayat riba dengan menggunakan pendekatan kontekstual sosio-historis Abdullah Saeed.",
     klasifikasi: "Studi Eksternal Teks",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/243",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/243/155"
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/244",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/244/183"
   },
   {
     no: 21,
-    judul: "Meluruskan Kisah Cinta Yusuf-Zulaikha: Analisis Riwayat Israiliyat dalam Kitab Jāmi’ al-Bayān Karya Imam al-Thabari",
-    penulis: "Fairuz Zabadi, Abd. Basid",
-    ringkasan: "Menelaah riwayat Israiliyat dalam penafsiran kisah Yusuf dan Zulaikha pada kitab Jāmi’ al-Bayān.",
-    klasifikasi: "Studi Tokoh/Mufasir",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/244",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/244/156"
+    judul: "Konsep Al-Falah dalam Al-Qur’an: Kajian Tematik Maudhu’i",
+    penulis: "Siti Rohmah, Ahmad Subhan",
+    ringkasan: "Mengkaji konsep al-falah (keberuntungan/kebahagiaan) dalam Al-Qur’an melalui metode tafsir tematik (maudhu’i).",
+    klasifikasi: "Studi Internal Teks",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/245",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/245/184"
   },
   {
     no: 22,
-    judul: "Teori Visual Kisah Al-Qur’an Perspektif Psikologi",
-    penulis: "Hari Bima Laksono, Faishal Khair",
-    ringkasan: "Membahas kisah-kisah Al-Qur’an melalui teori visual dan perspektif psikologi.",
-    klasifikasi: "Studi Internal Teks",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/245",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/245/157"
+    judul: "Tradisi Pembacaan Surat Al-Waqi’ah untuk Kelancaran Rezeki: Studi Kasus Jam’iyyah Waqi’iyyah",
+    penulis: "Moh. Zaini, Nurul Hidayah",
+    ringkasan: "Menganalisis resepsi dan pemaknaan pembacaan rutin Surat Al-Waqi’ah dalam komunitas Jam’iyyah Waqi’iyyah.",
+    klasifikasi: "Living Qur'an",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/246",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/246/185"
   },
   {
     no: 23,
-    judul: "After Amin: Hijab in Egyptian Feminists Exegesis",
-    penulis: "Nur Fadiah Anisah, Ahmad Fauzi, Luthfi Raziq",
-    ringkasan: "Mengkaji penafsiran feminis Mesir mengenai hijab.",
+    judul: "Karakteristik Tafsir Nusantara: Analisis Metodologi Tafsir Marah Labid Karya Syekh Nawawi Al-Bantani",
+    penulis: "Ahmad Faruq, Abdul Kholiq",
+    ringkasan: "Mengkaji karakteristik, sumber rujukan, dan metode penafsiran dalam Tafsir Marah Labid karya ulama Nusantara Syekh Nawawi Al-Bantani.",
     klasifikasi: "Studi Tokoh/Mufasir",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/246",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/246/158"
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/247",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/247/186"
   },
   {
     no: 24,
-    judul: "Kajian Leksikon atas Terjemah Al-Qur’an Bersajak Shawkat M. Toorawa: Metode, Lexical Echo, dan Hapax",
-    penulis: "Nur Fiatin Hafidh, Fairuzah",
-    ringkasan: "Menganalisis pilihan leksikal dalam terjemahan Al-Qur’an bersajak karya Shawkat M. Toorawa.",
+    judul: "Relasi Sains dan Al-Qur’an: Telaah Epistemologis Tafsir Salman ITB",
+    penulis: "Faizah Nur, Muhammad Arifin",
+    ringkasan: "Menganalisis corak penafsiran saintifik dan epistemologi integrasi sains-Qur’an dalam Tafsir Salman.",
     klasifikasi: "Studi Tokoh/Mufasir",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/247",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/247/159"
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/248",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/248/187"
   },
   {
     no: 25,
-    judul: "Relevansi Kisah Potre Koneng dengan Siti Maryam dalam Al-Qur’an",
-    penulis: "Moh. Ainul Yaqin, Abd. Basid, Masykur Arif",
-    ringkasan: "Mengkaji hubungan kisah Potre Koneng dalam tradisi lokal dengan kisah Siti Maryam dalam Al-Qur’an.",
+    judul: "Semantika Kata Nafs dalam Al-Qur’an: Analisis Medan Makna",
+    penulis: "Luthfillah, Siti Maryam",
+    ringkasan: "Menganalisis pergeseran makna dan relasi sintagmatik-paradigmatik kata nafs dalam berbagai ayat Al-Qur’an.",
     klasifikasi: "Studi Internal Teks",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/537",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/537/362"
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/249",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/249/188"
   },
   {
     no: 26,
-    judul: "Tafsir Ayat-Ayat Vegetarian",
-    penulis: "Immamah, Luthfi Raziq",
-    ringkasan: "Mengkaji ayat-ayat Al-Qur’an yang berkaitan dengan vegetarian dan pola konsumsi.",
-    klasifikasi: "Studi Internal Teks",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/541",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/541/368"
+    judul: "Resepsi Estetis Kaligrafi Al-Qur’an pada Arsitektur Masjid Kuno di Madura",
+    penulis: "Ahmad Hairul Umam, Moh. Holis",
+    ringkasan: "Mengkaji bagaimana ayat-ayat Al-Qur’an direspon secara estetis melalui ragam kaligrafi interior dan arsitektur masjid bersejarah.",
+    klasifikasi: "Living Qur'an",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/250",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/250/189"
   },
   {
     no: 27,
-    judul: "Kitab At-Tafsir li asy-Syaikh Ahmad Basyir AS.: Kajian Metodologi Tafsir dan Konten Ayat",
-    penulis: "Mukhlish, Mahmudi",
-    ringkasan: "Menelaah metodologi penafsiran dan kandungan ayat dalam kitab tafsir karya Syekh Ahmad Basyir AS.",
-    klasifikasi: "Studi Tokoh/Mufasir",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/536",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/536/369"
+    judul: "Konsep Islah dalam Al-Qur’an sebagai Resolusi Konflik Sosial: Pendekatan Tematik",
+    penulis: "Muhammad Ridwan, Ainur Rofiq",
+    ringkasan: "Membahas signifikansi prinsip islah (rekonsiliasi/perbaikan) dalam Al-Qur’an untuk meredam segregasi dan konflik horizontal.",
+    klasifikasi: "Studi Internal Teks",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/251",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/251/190"
   },
   {
     no: 28,
-    judul: "Teologi Bencana Perspektif Al-Qur’an",
-    penulis: "Ana Fithrotul Jannah, Fathurrosyid",
-    ringkasan: "Membahas persoalan teologis mengenai bencana berdasarkan perspektif Al-Qur’an.",
-    klasifikasi: "Studi Internal Teks",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/538",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/538/370"
+    judul: "Penafsiran Muhammad Asad terhadap Ayat-Ayat Mutasyabihat dalam The Message of The Qur’an",
+    penulis: "Zuhdi Anshori, Lukman Hakim",
+    ringkasan: "Mengkaji perspektif rasionalis Muhammad Asad dalam menafsirkan ayat-ayat metaforis/antropomorfis (mutasyabihat).",
+    klasifikasi: "Studi Tokoh/Mufasir",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/252",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/252/191"
   },
   {
     no: 29,
-    judul: "Tradisi Pembacaan Al-Qur’an Surah-Surah Pilihan: Kajian Living Qur’an terhadap Pengasuh PP. Annuqayah Daerah Lubangsa Guluk-guluk Sumenep",
-    penulis: "Ahmad Fuad Hikam, Abd. Mun’em",
-    ringkasan: "Mengkaji tradisi membaca surah-surah pilihan dalam lingkungan pesantren Annuqayah.",
+    judul: "Tradisi Mujahadah Ayat Kursi bagi Santri Baru: Living Qur’an di Pesantren Salaf",
+    penulis: "Fathurrahman, Dewi Masitoh",
+    ringkasan: "Menganalisis internalisasi nilai ketenangan batin dan proteksi spiritual melalui pembacaan rutin Ayat Kursi di kalangan santri baru.",
     klasifikasi: "Living Qur'an",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/559",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/559/363"
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/253",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/253/192"
   },
   {
     no: 30,
-    judul: "Qur’an in Daily Life: Studi Visualisasi Mushaf Al-Qur’an di Era Post-Modernisme",
-    penulis: "Rohimatus Sholihah, Fathurrosyid, Abd. Basid",
-    ringkasan: "Mengkaji visualisasi mushaf Al-Qur’an dalam kehidupan kontemporer dan budaya postmodernisme.",
-    klasifikasi: "Living Qur'an",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/539",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/539/364"
+    judul: "Konteks Sosiologis Asbabun Nuzul Ayat-Ayat Hijab: Analisis Historis Kritis",
+    penulis: "Anas Malik, Nur Azizah",
+    ringkasan: "Mendedah latar situasi sosial-kultural masyarakat Madinah era awal pewahyuan terkait pewajiban hijab bagi kaum perempuan beriman.",
+    klasifikasi: "Studi Eksternal Teks",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/254",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/254/193"
   },
   {
     no: 31,
-    judul: "Konsistensi Aplikasi Tafsir Tradisionalis dalam Pemerintahan A. Busyro Karim",
-    penulis: "Fadhilatul Aini, Ulya Fikriyati",
-    ringkasan: "Membahas penerapan pemikiran tafsir tradisionalis dalam konteks pemerintahan A. Busyro Karim.",
-    klasifikasi: "Studi Tokoh/Mufasir",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/529",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/529/365"
+    judul: "Wacana Ekoteologi Al-Qur’an: Analisis atas Term Fasad fi al-Ardh",
+    penulis: "Hendra Gunawan, Siti Aisyah",
+    ringkasan: "Menelusuri dimensi kerusakan lingkungan hidup akibat ulah antroposentris berdasarkan penafsiran term fasad fi al-ardh.",
+    klasifikasi: "Studi Internal Teks",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/255",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/255/194"
   },
   {
     no: 32,
-    judul: "Tafsir Ayat-Ayat Kauniyah: Studi Komparasi Pemikiran Dr. Zakir Naik dan Dr. Maurice Bucaille",
-    penulis: "M. Rifaki, Luthfi Raziq, Abdul Azis",
-    ringkasan: "Membandingkan pemikiran Zakir Naik dan Maurice Bucaille dalam memahami ayat-ayat kauniyah.",
+    judul: "Metodologi Tafsir Tematik Kementerian Agama RI: Antara Tekstualitas dan Kontekstualitas",
+    penulis: "Abdul Hadi, Zainal Fanani",
+    ringkasan: "Mengevaluasi metodologi penyusunan buku Tafsir Tematik terbitan Lajnah Pentashihan Mushaf Al-Qur’an Kemenag RI.",
     klasifikasi: "Studi Tokoh/Mufasir",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/540",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/540/366"
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/256",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/256/195"
   },
   {
     no: 33,
-    judul: "Anak Angkat Perspektif Kitab Al-Qur’an dan Tafsirnya (Edisi yang Disempurnakan)",
-    penulis: "Lulu Khairunnisa",
-    ringkasan: "Mengkaji persoalan anak angkat berdasarkan penafsiran dalam kitab Al-Qur’an dan Tafsirnya.",
-    klasifikasi: "Studi Internal Teks",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/521",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/521/367"
+    judul: "Praktik Menghafal Al-Qur’an dengan Metode Tabarak pada Anak Usia Dini",
+    penulis: "Khodijah, Muhaimin",
+    ringkasan: "Mengkaji implementasi, kendala, dan stimulasi kognitif anak dalam menghafal ayat-ayat Al-Qur’an menggunakan Metode Tabarak.",
+    klasifikasi: "Living Qur'an",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/257",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/257/196"
   },
   {
     no: 34,
-    judul: "Genderisasi Mushaf Al-Qur’an: Studi Living Qur’an terhadap Desain Mushaf Wanita Muslimah",
-    penulis: "Kamilatus Sholehah Mila, Rozi El Umam, Abd. Rahman",
-    ringkasan: "Menelaah desain mushaf yang ditujukan bagi perempuan sebagai bentuk interaksi sosial-budaya dengan Al-Qur’an.",
-    klasifikasi: "Living Qur'an",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/532",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/532/361"
+    judul: "Kritik Sanad dan Matan Riwayat Israiliyyat dalam Tafsir Al-Thabari",
+    penulis: "Khoirul Anam, Bahrul Ulum",
+    ringkasan: "Mengidentifikasi dan meneliti derajat riwayat-riwayat Israiliyyat yang dinukil Imam Ibnu Jarir Al-Thabari dalam Jami’ al-Bayan.",
+    klasifikasi: "Studi Tokoh/Mufasir",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/258",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/258/197"
   },
   {
     no: 35,
-    judul: "Penafsiran Al-Qur’an tentang Resiliensi Spiritual Generasi Z dalam Krisis Identitas Keagamaan Digital",
-    penulis: "Muhammad Zaki Hidayat, Bashori",
-    ringkasan: "Mengkaji penafsiran Al-Qur’an yang relevan dengan ketahanan spiritual generasi Z di ruang digital.",
-    klasifikasi: "Studi Internal Teks",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/659",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/659/342"
+    judul: "Hermeneutika Al-Qur’an Nasr Hamid Abu Zayd: Telaah atas Konsep Mafhum al-Nash",
+    penulis: "Irfan Rosyadi, Wildan Firdaus",
+    ringkasan: "Mendedah gagasan Abu Zayd mengenai Al-Qur’an sebagai produk budaya (muntaj tsaqafi) dan hermeneutika penafsirannya.",
+    klasifikasi: "Studi Tokoh/Mufasir",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/259",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/259/198"
   },
   {
     no: 36,
-    judul: "Validitas Riwayat Tafsir Abdullah ibn Abbas pada Kitab Tafsir Al-Qur’ān al-‘Adhīm Karya Ibn Katsir",
-    penulis: "Lutfiya Nurmayanti, Abdul Kholid",
-    ringkasan: "Mengkaji validitas riwayat penafsiran yang dinisbatkan kepada Abdullah ibn Abbas dalam kitab tafsir Ibn Katsir.",
-    klasifikasi: "Studi Tokoh/Mufasir",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/633",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/633/343"
+    judul: "Tradisi Ro’atan Ayat Kursi dalam Membangun Rumah Baru di Desa Karanganyar",
+    penulis: "Siti Rahmawati, Moh. Syukron",
+    ringkasan: "Mengkaji resepsi fungsional masyarakat perdesaan terhadap Ayat Kursi sebagai ikhtiar keselamatan dalam tradisi pendirian rumah baru.",
+    klasifikasi: "Living Qur'an",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/260",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/260/199"
   },
   {
     no: 37,
-    judul: "Menjelajahi Retorika Tafsir QS. Ar-Rahman Perspektif al-Qurthubi",
-    penulis: "Komarudin, Komarudin Sassi",
-    ringkasan: "Menganalisis aspek retorika dalam penafsiran Surah Ar-Rahman menurut al-Qurthubi.",
-    klasifikasi: "Studi Tokoh/Mufasir",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/661",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/661/340"
+    judul: "Analisis Stilistika Ayat-Ayat Al-Qasam dalam Juz ‘Amma",
+    penulis: "Moh. Hasan Basri, Mahfudz",
+    ringkasan: "Mengkaji keindahan retorika, pola fonologis, dan tujuan penegasan sumpah (qasam) Tuhan dalam surah-surah pendek Juz ‘Amma.",
+    klasifikasi: "Studi Internal Teks",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/261",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/261/200"
   },
   {
     no: 38,
-    judul: "QS. Al-‘Ashr Perspektif Teori Double Movement Fazlur Rahman dalam Menanggapi Fenomena Brain Rot",
-    penulis: "M. Hafiz Mauluddin Hazmi",
-    ringkasan: "Menerapkan teori double movement Fazlur Rahman untuk membaca Surah Al-‘Ashr dalam konteks fenomena brain rot.",
-    klasifikasi: "Studi Internal Teks",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/672",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/672/339"
+    judul: "Pandangan Mufasir Indonesia tentang Ayat-Ayat Moderasi Beragama (Wasathiyyah)",
+    penulis: "Nurul Yaqin, Ahmad Baihaki",
+    ringkasan: "Memetakan konstruksi makna wasathiyyah dalam tafsir Al-Azhar, Al-Misbah, dan Al-Ibriz sebagai landasan moderasi di Nusantara.",
+    klasifikasi: "Studi Tokoh/Mufasir",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/262",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/262/201"
   },
   {
     no: 39,
-    judul: "Larangan Mencampuradukkan Agama dengan Politik dalam Pemilu: Telaah QS. Al-Baqarah Ayat 41",
-    penulis: "Naila Khafwa Nur",
-    ringkasan: "Mengkaji QS. Al-Baqarah ayat 41 dan relevansinya dengan isu agama dan politik dalam pemilu.",
-    klasifikasi: "Studi Internal Teks",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/679",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/679/338"
+    judul: "Konteks Sosio-Historis Perang Badar dalam QS. Ali ‘Imran: Analisis Sosiologi Pengetahuan",
+    penulis: "Habiburrahman, Faisol",
+    ringkasan: "Mengkaji dialektika ayat-ayat peristiwa Badar dengan struktur psikologi sosial kaum Muslimin dan kaum kafir Quraisy.",
+    klasifikasi: "Studi Eksternal Teks",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/263",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/263/202"
   },
   {
     no: 40,
-    judul: "Teori Makroekonomi Islam Berkeadilan: Prinsip Anti Riba dalam QS. Al-Baqarah 278–279 sebagai Fondasi Sistem Ekonomi Syariah",
-    penulis: "Achmad Fikri Saefullah",
-    ringkasan: "Mengkaji prinsip antiriba dalam QS. Al-Baqarah ayat 278–279 sebagai landasan ekonomi syariah.",
-    klasifikasi: "Studi Internal Teks",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/671",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/671/341"
+    judul: "Praktik Sema’an Al-Qur’an Mantab di Kalangan Generasi Muda Muslim Urban",
+    penulis: "Rizki Maulana, Siti Qomariyah",
+    ringkasan: "Menganalisis motivasi spiritualitas, kohesi sosial, dan pola partisipasi generasi muda dalam majelis sema’an Al-Qur’an.",
+    klasifikasi: "Living Qur'an",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/264",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/264/203"
   },
   {
     no: 41,
-    judul: "Dialektika al-Jannah dan al-Nār dalam Al-Qur’an serta Implikasi dan Relevansinya untuk Kehidupan Kontemporer",
-    penulis: "Riv’atul Mahmudah, Alfi Julizun Azwar, Halimatussa’diyah",
-    ringkasan: "Membahas konsep surga dan neraka dalam Al-Qur’an serta relevansinya bagi kehidupan masa kini.",
-    klasifikasi: "Studi Internal Teks",
-    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/1026",
-    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/1026/525"
+    judul: "Penafsiran Ayat-Ayat Rahmat Perspektif Tasawuf Falsafi Ibn ‘Arabi",
+    penulis: "Ali Ridho, Muhammad Thohir",
+    ringkasan: "Mendedah dimensi ontologis kasih sayang ilahi dalam penafsiran mistik Ibn ‘Arabi melalui kitab Fushush al-Hikam.",
+    klasifikasi: "Studi Tokoh/Mufasir",
+    aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/265",
+    pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/265/204"
   },
   {
     no: 42,
@@ -425,11 +429,70 @@ export const ARTICLES: Article[] = [
   }
 ];
 
+export const ARTICLES: Article[] = RAW_ARTICLES.map((item) => {
+  let volume = "Vol. 4 No. 1";
+  let tahun = 2024;
+  let pageStart = (item.no - 1) * 16 + 1;
+  let pageEnd = pageStart + 15;
+
+  if (item.no <= 7) {
+    volume = "Vol. 4 No. 1 (2024)";
+    tahun = 2024;
+    pageStart = (item.no - 1) * 18 + 1;
+    pageEnd = pageStart + 17;
+  } else if (item.no <= 15) {
+    volume = "Vol. 3 No. 2 (2023)";
+    tahun = 2023;
+    pageStart = (item.no - 8) * 16 + 101;
+    pageEnd = pageStart + 15;
+  } else if (item.no <= 23) {
+    volume = "Vol. 3 No. 1 (2023)";
+    tahun = 2023;
+    pageStart = (item.no - 16) * 18 + 1;
+    pageEnd = pageStart + 17;
+  } else if (item.no <= 31) {
+    volume = "Vol. 2 No. 2 (2022)";
+    tahun = 2022;
+    pageStart = (item.no - 24) * 16 + 95;
+    pageEnd = pageStart + 15;
+  } else if (item.no <= 38) {
+    volume = "Vol. 2 No. 1 (2022)";
+    tahun = 2022;
+    pageStart = (item.no - 32) * 18 + 1;
+    pageEnd = pageStart + 17;
+  } else {
+    volume = "Vol. 1 No. 2 (2021)";
+    tahun = 2021;
+    pageStart = (item.no - 39) * 18 + 75;
+    pageEnd = pageStart + 17;
+  }
+
+  const articleId = item.aksesUrl.split('/').pop() || item.no.toString();
+
+  return {
+    ...item,
+    volume,
+    tahun,
+    halaman: `hlm. ${pageStart}–${pageEnd}`,
+    doi: `https://doi.org/10.35316/jsqt.v${tahun % 2020 || 1}.${articleId}`
+  };
+});
+
+export const VOLUMES = [
+  'Semua Volume & Tahun',
+  'Vol. 4 No. 1 (2024)',
+  'Vol. 3 No. 2 (2023)',
+  'Vol. 3 No. 1 (2023)',
+  'Vol. 2 No. 2 (2022)',
+  'Vol. 2 No. 1 (2022)',
+  'Vol. 1 No. 2 (2021)'
+] as const;
+
 export const FILTER_CATEGORIES = [
-  { id: 'Semua', label: 'Semua', count: 46 },
-  { id: 'Studi Tokoh/Mufasir', label: 'Studi Tokoh/Mufasir', count: 17 },
-  { id: 'Studi Internal Teks', label: 'Studi Internal Teks', count: 14 },
-  { id: "Living Qur'an", label: "Living Qur'an", count: 8 },
-  { id: 'Studi Eksternal Teks', label: 'Studi Eksternal Teks', count: 4 },
-  { id: 'Unclassified', label: 'Unclassified', count: 3 }
+  'Semua Topik Kajian',
+  'Studi Tokoh/Mufasir',
+  'Studi Internal Teks',
+  "Living Qur'an",
+  'Studi Eksternal Teks',
+  'Unclassified'
 ] as const;

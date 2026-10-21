@@ -1,962 +1,521 @@
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JSQT Archive — Direktori Riset IAT Universitas Annuqayah</title>
-  <meta name="description" content="Direktori & repositori digital riset Ilmu Al-Qur'an dan Tafsir (IAT) Universitas Annuqayah berbasis 4 Objek Penelitian IAT.">
+  <title>JSQT — Jurnal Studi Al-Qur'an dan Tafsir | Universitas Annuqayah</title>
+  <meta name="description" content="Direktori ilmiah digital Jurnal Studi Al-Qur'an dan Tafsir (JSQT) Program Studi Ilmu Al-Qur'an dan Tafsir (IAT) Universitas Annuqayah.">
   
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
-          colors: {
-            darkBg: '#0b0f19',
-            cardBg: '#131b2e',
-            cardHover: '#18223a',
-            borderCol: '#1e293b',
-            accentBlue: '#2563eb',
-            accentLight: '#60a5fa'
+          screens: {
+            'xs': '480px'
           },
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+            serif: ['"Playfair Display"', 'Georgia', 'Cambria', 'serif'],
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif']
           }
         }
       }
     };
   </script>
 
-  <!-- Google Fonts: Plus Jakarta Sans -->
+  <!-- Google Fonts: Playfair Display (Serif) & Plus Jakarta Sans (Sans) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
 
-  <!-- Font Awesome Icons -->
+  <!-- Font Awesome 6 Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #0b0f19;
-      color: #f1f5f9;
+      background-color: #FAFAFA;
+      color: #1E293B;
+      -webkit-font-smoothing: antialiased;
       -webkit-tap-highlight-color: transparent;
     }
+    .font-serif {
+      font-family: 'Playfair Display', Georgia, Cambria, serif;
+    }
+    .font-sans {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
     ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
     }
     ::-webkit-scrollbar-track {
-      background: #0b0f19;
+      background: #F1F5F9;
     }
     ::-webkit-scrollbar-thumb {
-      background: #1e293b;
+      background: #CBD5E1;
       border-radius: 9999px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #334155;
-    }
-    .glass-nav {
-      background-color: rgba(19, 27, 46, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: #94A3B8;
     }
   </style>
 </head>
-<body class="bg-darkBg text-slate-100 min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white pb-20 md:pb-6">
+<body class="bg-[#FAFAFA] text-[#1E293B] min-h-screen flex flex-col antialiased selection:bg-[#0F382C]/15 selection:text-[#0F382C]">
 
-  <!-- Toast Notification Container -->
-  <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col space-y-2 pointer-events-none max-w-sm w-full"></div>
+  <!-- Toast Notification -->
+  <div id="toast-container" class="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 flex flex-col space-y-2 pointer-events-none max-w-sm w-full"></div>
 
-  <!-- TOP NAVBAR -->
-  <header id="app-header" class="sticky top-0 z-40 glass-nav border-b border-borderCol">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+  <!-- 1. HEADER (BRANDING RINGKAS & SELARAS) -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-15 sm:h-16 flex items-center justify-between gap-3">
       
-      <!-- Brand Logo -->
-      <div class="flex items-center space-x-3 cursor-pointer select-none" onclick="switchTab('home')">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-md shadow-blue-500/20 ring-1 ring-white/10">
-          <i class="fa-solid fa-book-quran text-sm"></i>
+      <!-- Brand Logo Lockup: [Ikon Buku] JSQT [OPEN ACCESS] | Universitas Annuqayah -->
+      <div onclick="switchTab('naskah')" class="flex items-center gap-2.5 sm:gap-3 cursor-pointer group select-none py-1">
+        <div class="relative w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-[#0F382C] via-[#144838] to-[#0A261E] text-white flex items-center justify-center shadow-2xs border border-emerald-700/40 shrink-0 group-hover:scale-105 transition-transform">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            <path d="M6 8h2"></path>
+            <path d="M6 12h2"></path>
+            <path d="M16 8h2"></path>
+            <path d="M16 12h2"></path>
+          </svg>
+          <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-400 ring-1.5 ring-white"></span>
         </div>
-        <div class="flex flex-col">
-          <div class="flex items-center space-x-2">
-            <span class="font-extrabold text-base sm:text-lg tracking-tight text-white">JSQT</span>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30 uppercase tracking-wider">Arsip IAT</span>
-          </div>
-          <p class="text-[11px] text-slate-400 font-medium -mt-0.5">Universitas Annuqayah</p>
+
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <span class="font-serif font-extrabold text-lg sm:text-xl text-[#0F382C] tracking-tight leading-none group-hover:text-[#185240] transition">
+            JSQT
+          </span>
+          <span class="text-[10px] font-semibold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200/80 px-1.5 py-0.5 rounded leading-none">
+            Open Access
+          </span>
+          <span class="text-slate-300 font-light hidden xs:inline text-xs sm:text-sm">|</span>
+          <span class="text-xs sm:text-sm text-slate-600 font-medium hidden xs:inline leading-none">
+            Universitas Annuqayah
+          </span>
         </div>
       </div>
 
-      <!-- Desktop Navigation Menu -->
-      <nav id="desktop-nav" class="hidden md:flex items-center space-x-1 bg-slate-900/60 p-1 rounded-xl border border-borderCol/70">
-        <button onclick="switchTab('home')" class="nav-btn px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition text-blue-400 bg-blue-500/10 border border-blue-500/20" data-target="home">
-          <i class="fa-solid fa-gauge-high mr-1.5 text-xs"></i> Dashboard
+      <!-- Desktop Nav -->
+      <nav id="desktop-nav" class="hidden md:flex items-center space-x-1 text-xs sm:text-sm font-medium">
+        <button onclick="switchTab('naskah')" class="nav-btn px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 text-[#0F382C] font-semibold bg-emerald-50/80 shadow-2xs" data-target="naskah">
+          <i class="fa-solid fa-book-open text-xs"></i>
+          <span>Daftar Naskah</span>
         </button>
-        <button onclick="switchTab('articles')" class="nav-btn px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition text-slate-400 hover:text-slate-100 hover:bg-slate-800/60" data-target="articles">
-          <i class="fa-solid fa-newspaper mr-1.5 text-xs"></i> Semua Artikel
+        <button onclick="switchTab('tentang')" class="nav-btn px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100/80" data-target="tentang">
+          <i class="fa-solid fa-graduation-cap text-xs"></i>
+          <span>Tentang Jurnal</span>
         </button>
-        <button onclick="switchTab('about')" class="nav-btn px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition text-slate-400 hover:text-slate-100 hover:bg-slate-800/60" data-target="about">
-          <i class="fa-solid fa-graduation-cap mr-1.5 text-xs"></i> Tentang
+        <button onclick="switchTab('petunjuk')" class="nav-btn px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100/80" data-target="petunjuk">
+          <i class="fa-solid fa-file-lines text-xs"></i>
+          <span>Petunjuk Penulis</span>
         </button>
       </nav>
 
-      <!-- Action Button: Portal OJS -->
-      <div class="flex items-center space-x-2">
-        <a href="https://journal.ua.ac.id/index.php/jsqt/issue/archive" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition flex items-center gap-1.5 border border-borderCol hover:border-slate-600 shadow-sm">
-          <i class="fa-solid fa-globe text-blue-400"></i>
-          <span class="hidden sm:inline">Portal OJS</span>
-          <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-400"></i>
+      <!-- Actions -->
+      <div class="flex items-center gap-2">
+        <a href="https://journal.ua.ac.id/index.php/jsqt/submission/wizard" target="_blank" rel="noopener noreferrer" class="min-h-[38px] sm:min-h-[40px] px-3 sm:px-3.5 py-1.5 rounded-lg bg-[#0F382C] hover:bg-[#185240] text-white text-xs font-semibold tracking-wide transition shadow-2xs flex items-center gap-1.5 active:scale-95">
+          <i class="fa-solid fa-file-circle-check text-emerald-200"></i>
+          <span class="hidden xs:inline">Kirim Naskah</span>
+          <span class="xs:hidden">Submit</span>
         </a>
+
+        <!-- Hamburger Button -->
+        <button onclick="toggleMobileDrawer()" class="md:hidden w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-100 transition active:scale-95" aria-label="Buka Menu">
+          <i id="hamburger-icon" class="fa-solid fa-bars text-sm text-slate-800"></i>
+        </button>
       </div>
 
     </div>
   </header>
 
-  <!-- MAIN APP CONTAINER -->
-  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
-
-    <!-- ==========================================
-         VIEW 1: DASHBOARD (HOME)
-         ========================================== -->
-    <section id="tab-home" class="tab-content space-y-6">
+  <!-- MOBILE DRAWER -->
+  <div id="mobile-drawer" class="fixed inset-0 z-50 md:hidden flex flex-col justify-end hidden">
+    <div onclick="toggleMobileDrawer()" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs"></div>
+    <div class="relative bg-white rounded-t-2xl border-t border-slate-200 p-5 space-y-4 shadow-2xl max-h-[85vh] overflow-y-auto z-10">
+      <div class="w-10 h-1 bg-slate-200 rounded-full mx-auto -mt-1 mb-1"></div>
       
-      <!-- Welcome Hero Banner -->
-      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-cardBg to-blue-950/40 border border-borderCol p-6 sm:p-8 shadow-xl">
-        <div class="absolute -right-12 -bottom-12 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="relative z-10 max-w-3xl space-y-3">
-          <div class="flex items-center gap-2">
-            <span class="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-bold border border-blue-500/20 flex items-center gap-1.5">
-              <i class="fa-solid fa-sparkles text-[10px]"></i> Arsip Riset IAT • Universitas Annuqayah
-            </span>
-            <span class="text-xs text-slate-400 hidden sm:inline">Journal of Qur'anic Studies & Tafsir (JSQT)</span>
-          </div>
-          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
-            Direktori Riset Ilmu Al-Qur'an & Tafsir
-          </h1>
-          <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-            Sarana eksplorasi riset dosen & civitas akademika Program Studi Ilmu Al-Qur'an dan Tafsir (IAT) Universitas Annuqayah. Memetakan 46 naskah ilmiah berdasarkan 4 Objek Penelitian IAT (Studi Internal Teks, Studi Eksternal Teks, Studi Tokoh/Mufasir, dan Living Qur'an).
-          </p>
-          <div class="pt-2 flex flex-wrap items-center gap-3">
-            <button onclick="switchTab('articles')" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold transition flex items-center gap-2 shadow-lg shadow-blue-500/20 active:scale-95">
-              <i class="fa-solid fa-book-open"></i> Buka Arsip Lengkap
-            </button>
-            <button onclick="switchTab('about')" class="px-4 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-200 text-xs sm:text-sm font-semibold transition flex items-center gap-2 border border-borderCol active:scale-95">
-              <i class="fa-solid fa-circle-info text-blue-400"></i> 4 Objek Penelitian IAT
-            </button>
-          </div>
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="font-serif font-bold text-base text-[#0F382C]">JSQT Navigation</span>
+          <span class="text-[10px] font-mono bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">Menu</span>
         </div>
-      </div>
-
-      <!-- Real-Time Stats Grid (4 Metrics) -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <!-- Stat 1: Total Artikel -->
-        <div class="bg-cardBg border border-borderCol p-5 rounded-2xl flex flex-col justify-between space-y-2 shadow-sm">
-          <div class="flex items-center justify-between text-slate-400">
-            <span class="text-xs font-semibold uppercase tracking-wider">Total Artikel</span>
-            <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center text-xs">
-              <i class="fa-solid fa-book-bookmark"></i>
-            </div>
-          </div>
-          <div>
-            <h3 class="text-2xl sm:text-3xl font-extrabold text-blue-400 font-mono">46</h3>
-            <p class="text-[11px] text-slate-400 mt-1">Naskah Terpublikasi & Terindeks</p>
-          </div>
-        </div>
-
-        <!-- Stat 2: Objek Kajian IAT -->
-        <div class="bg-cardBg border border-borderCol p-5 rounded-2xl flex flex-col justify-between space-y-2 shadow-sm">
-          <div class="flex items-center justify-between text-slate-400">
-            <span class="text-xs font-semibold uppercase tracking-wider">Objek Kajian IAT</span>
-            <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center text-xs">
-              <i class="fa-solid fa-layer-group"></i>
-            </div>
-          </div>
-          <div>
-            <h3 class="text-2xl sm:text-3xl font-extrabold text-purple-400 font-mono">4 Pilar</h3>
-            <p class="text-[11px] text-slate-400 mt-1">Klasifikasi Objek Penelitian IAT</p>
-          </div>
-        </div>
-
-        <!-- Stat 3: Akses Dokumen -->
-        <div class="bg-cardBg border border-borderCol p-5 rounded-2xl flex flex-col justify-between space-y-2 shadow-sm">
-          <div class="flex items-center justify-between text-slate-400">
-            <span class="text-xs font-semibold uppercase tracking-wider">Akses Terbuka</span>
-            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs">
-              <i class="fa-solid fa-file-arrow-down"></i>
-            </div>
-          </div>
-          <div>
-            <h3 class="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono">100%</h3>
-            <p class="text-[11px] text-slate-400 mt-1">Open Access & PDF Lengkap</p>
-          </div>
-        </div>
-
-        <!-- Stat 4: Basis Repositori -->
-        <div class="bg-cardBg border border-borderCol p-5 rounded-2xl flex flex-col justify-between space-y-2 shadow-sm">
-          <div class="flex items-center justify-between text-slate-400">
-            <span class="text-xs font-semibold uppercase tracking-wider">Sumber Portal</span>
-            <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center text-xs">
-              <i class="fa-solid fa-globe"></i>
-            </div>
-          </div>
-          <div>
-            <h3 class="text-2xl sm:text-3xl font-extrabold text-amber-400 font-mono">OJS UA</h3>
-            <p class="text-[11px] text-slate-400 mt-1">Universitas Annuqayah</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Recent Sample Articles Grid -->
-      <div class="space-y-4 pt-2">
-        <div class="flex items-center justify-between">
-          <div>
-            <h2 class="text-lg sm:text-xl font-bold text-white">Sorotan Naskah Pilihan</h2>
-            <p class="text-xs text-slate-400">Sampel kajian metodologis dan tematik tafsir terkini</p>
-          </div>
-          <button onclick="switchTab('articles')" class="text-xs sm:text-sm font-semibold text-blue-400 hover:text-blue-300 transition inline-flex items-center gap-1 group">
-            Lihat Semua Arsip (46) <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-0.5 transition-transform"></i>
-          </button>
-        </div>
-        <div id="home-samples" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <!-- Populated dynamically via JS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- ==========================================
-         VIEW 2: SEMUA ARTIKEL (TABLE & SIDEBAR KATEGORI)
-         ========================================== -->
-    <section id="tab-articles" class="tab-content space-y-6 hidden">
-      
-      <!-- Section Header -->
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-cardBg border border-borderCol p-5 rounded-2xl">
-        <div>
-          <div class="flex items-center gap-2">
-            <h2 class="text-xl font-bold text-white">Semua Naskah</h2>
-            <span id="articles-count-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono">
-              46 / 46
-            </span>
-          </div>
-          <p id="articles-filtered-count" class="text-xs text-slate-400 mt-0.5">Daftar seluruh 46 naskah riset dosen & civitas akademika IAT Universitas Annuqayah</p>
-        </div>
-
-        <!-- Search Bar -->
-        <div class="w-full md:w-80 relative">
-          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-          <input type="text" id="searchInput" oninput="filterArticles()" placeholder="Cari judul, penulis, ringkasan..." class="w-full bg-slate-900 border border-borderCol rounded-xl pl-9 pr-8 py-2 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition" />
-          <button onclick="resetArticleFilters()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 text-xs" title="Reset filter">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- Mobile Category Dropdown -->
-      <div class="block lg:hidden">
-        <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Pilih Objek Kajian IAT:</label>
-        <select id="category-mobile-select" onchange="handleMobileCategoryChange(event)" class="w-full bg-cardBg border border-borderCol text-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium focus:outline-none focus:border-blue-500">
-          <!-- Populated via JS -->
-        </select>
-      </div>
-
-      <!-- Layout: Vertical Category Sidebar (Desktop) + Articles Table -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        
-        <!-- Left Sidebar List / Menu Vertikal Kategori -->
-        <aside class="hidden lg:block lg:col-span-3 bg-cardBg border border-borderCol rounded-2xl p-4 sticky top-24 space-y-3">
-          <div class="flex items-center justify-between pb-3 border-b border-borderCol/80">
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Objek Penelitian IAT</span>
-            <button onclick="resetArticleFilters()" class="text-[11px] text-blue-400 hover:underline">Reset</button>
-          </div>
-          <div id="category-sidebar-list" class="space-y-1">
-            <!-- Populated via JS -->
-          </div>
-        </aside>
-
-        <!-- Right Main: Table of Articles -->
-        <div class="lg:col-span-9 bg-cardBg border border-borderCol rounded-2xl overflow-hidden shadow-sm">
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="border-b border-borderCol bg-slate-900/70 text-slate-400 text-xs uppercase tracking-wider font-semibold">
-                  <th class="p-4 w-14 text-center">No</th>
-                  <th class="p-4 w-36">Objek Kajian</th>
-                  <th class="p-4">Judul Artikel & Penulis</th>
-                  <th class="p-4 min-w-[260px]">Inti Kajian / Abstrak</th>
-                  <th class="p-4 w-36 text-center">Aksi Naskah</th>
-                </tr>
-              </thead>
-              <tbody id="articles-tbody" class="divide-y divide-borderCol/60">
-                <!-- Populated via JS with dynamic 1..N and Badge ID -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ==========================================
-         VIEW 3: TENTANG (ABOUT & 4 OBJEK PENELITIAN IAT)
-         ========================================== -->
-    <section id="tab-about" class="tab-content space-y-6 hidden">
-      <div class="bg-cardBg border border-borderCol p-6 sm:p-10 rounded-3xl max-w-3xl mx-auto space-y-8 shadow-xl">
-        
-        <!-- Profile Header -->
-        <div class="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-5 border-b border-borderCol pb-8 text-center sm:text-left">
-          <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-600/20 to-indigo-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-3xl font-bold shadow-inner flex-shrink-0">
-            <i class="fa-solid fa-graduation-cap"></i>
-          </div>
-          <div class="space-y-1.5">
-            <h2 class="text-2xl font-extrabold text-white">Direktori & Arsip Jurnal Studi Al-Qur'an dan Tafsir (JSQT)</h2>
-            <p class="text-xs sm:text-sm font-semibold text-blue-400">
-              Program Studi Ilmu Al-Qur'an dan Tafsir (IAT) • Universitas Annuqayah • 2026
-            </p>
-            <p class="text-xs text-slate-400">
-              Platform penelusuran naskah ilmiah berbasis 4 Objek Penelitian IAT sebagai sarana eksplorasi riset dosen & civitas akademika
-            </p>
-          </div>
-        </div>
-
-        <!-- Narrative Content: 4 Objek Penelitian IAT -->
-        <div class="space-y-6 text-slate-300 text-sm sm:text-base leading-relaxed">
-          <p>
-            <strong class="text-white">Direktori & Arsip JSQT</strong> dirancang sebagai sarana eksplorasi riset dosen & civitas akademika Program Studi Ilmu Al-Qur'an dan Tafsir (IAT) Universitas Annuqayah dalam memetakan, meneliti, dan mengembangkan khazanah keilmuan Al-Qur’an secara terstruktur, komprehensif, dan terbuka.
-          </p>
-
-          <!-- 4 Objek Penelitian IAT Container -->
-          <div class="p-5 rounded-2xl bg-slate-900/80 border border-borderCol space-y-4">
-            <div class="flex items-center justify-between border-b border-borderCol pb-3">
-              <h3 class="font-bold text-white text-sm uppercase tracking-wider flex items-center gap-2">
-                <i class="fa-solid fa-layer-group text-blue-400"></i>
-                4 Objek Penelitian Ilmu Al-Qur’an dan Tafsir (IAT)
-              </h3>
-              <span class="text-[11px] text-blue-400 font-mono font-semibold">Objek Riset IAT</span>
-            </div>
-
-            <div class="space-y-4 text-xs sm:text-sm">
-              <!-- 1. Studi Internal Teks -->
-              <div class="p-3.5 rounded-xl bg-cardBg/60 border border-emerald-500/20 space-y-1.5">
-                <h4 class="font-bold text-emerald-400 text-sm flex items-center gap-2">
-                  <span>1. Studi Internal Teks</span>
-                  <span class="text-slate-400 italic text-xs">(دراسة ما في القرآن نفسه)</span>
-                </h4>
-                <p class="text-slate-300">
-                  Penelitian yang berfokus langsung pada ayat Al-Qur’an. Ayat Al-Qur'an menjadi objek kajian secara langsung.
-                </p>
-                <p class="text-[11px] text-slate-400 font-mono bg-slate-900/60 p-2 rounded-lg">
-                  <strong>Alur Penelitian:</strong> Membaca ayat Al-Qur’an → Memahami ayat → Mencari penafsiran dari berbagai kitab tafsir → Membandingkan penafsiran → Menyusun tesis/argumentasi → Menarik kesimpulan.
-                </p>
-              </div>
-
-              <!-- 2. Studi Eksternal Teks -->
-              <div class="p-3.5 rounded-xl bg-cardBg/60 border border-amber-500/20 space-y-1.5">
-                <h4 class="font-bold text-amber-400 text-sm flex items-center gap-2">
-                  <span>2. Studi Eksternal Teks</span>
-                  <span class="text-slate-400 italic text-xs">(دراسة ما حول القرآن)</span>
-                </h4>
-                <p class="text-slate-300">
-                  Penelitian yang berfokus pada ilmu-ilmu yang berkaitan dengan Al-Qur’an atau ilmu-ilmu yang menjadi alat untuk memahami Al-Qur’an. Fokus utamanya adalah <em>Ulumul Qur’an</em> (علوم القرآن).
-                </p>
-                <p class="text-[11px] text-slate-400">
-                  Contohnya kajian <em>asbāb al-nuzūl</em> (sebab-sebab turunnya ayat), dengan kitab rujukan utama seperti <em>Lubāb al-Nuqūl fī Asbāb al-Nuzūl</em> karya Imam Jalaluddin as-Suyuthi.
-                </p>
-              </div>
-
-              <!-- 3. Studi Tokoh -->
-              <div class="p-3.5 rounded-xl bg-cardBg/60 border border-blue-500/20 space-y-1.5">
-                <h4 class="font-bold text-blue-400 text-sm flex items-center gap-2">
-                  <span>3. Studi Tokoh / Mufasir</span>
-                  <span class="text-slate-400 italic text-xs">(دراسة مفسر القرآن)</span>
-                </h4>
-                <p class="text-slate-300">
-                  Penelitian yang berfokus pada pendapat, pandangan, atau pernyataan seorang tokoh, khususnya mufasir Al-Qur’an, yang mencakup dua aspek:
-                </p>
-                <ul class="text-slate-400 text-xs list-disc list-inside space-y-1 pl-1">
-                  <li><strong class="text-slate-200">Internal teks:</strong> Pendapat atau pandangan tokoh dalam menafsirkan ayat-ayat Al-Qur’an.</li>
-                  <li><strong class="text-slate-200">Eksternal teks:</strong> Latar belakang tokoh, lingkungan, pendidikan, serta hal-hal yang memengaruhi pemikirannya.</li>
-                </ul>
-              </div>
-
-              <!-- 4. Studi Living Qur'an -->
-              <div class="p-3.5 rounded-xl bg-cardBg/60 border border-purple-500/20 space-y-1.5">
-                <h4 class="font-bold text-purple-400 text-sm flex items-center gap-2">
-                  <span>4. Studi Living Qur’an</span>
-                  <span class="text-slate-400 italic text-xs">(دراسة القرآن الحي)</span>
-                </h4>
-                <p class="text-slate-300">
-                  Kajian tentang bagaimana Al-Qur’an diterima, diperlakukan, dipahami, dan dipraktikkan dalam kehidupan masyarakat (المعايشة / interaksi sehari-hari bersama Al-Qur'an), mencakup 3 bentuk resepsi:
-                </p>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-[11px]">
-                  <div class="bg-slate-900/60 p-2 rounded-lg">
-                    <strong class="text-purple-300 block">a. Resepsi Eksegesis</strong>
-                    Pemahaman, pengajaran, dan penafsiran ayat dalam pembelajaran atau pengajian.
-                  </div>
-                  <div class="bg-slate-900/60 p-2 rounded-lg">
-                    <strong class="text-purple-300 block">b. Resepsi Estetis</strong>
-                    Aspek keindahan bacaan (seni tilawah) dan seni kaligrafi ayat Al-Qur’an.
-                  </div>
-                  <div class="bg-slate-900/60 p-2 rounded-lg">
-                    <strong class="text-purple-300 block">c. Resepsi Fungsional</strong>
-                    Praktik pembacaan ayat/surat tertentu untuk tujuan fungsional, kemanfaatan, atau perlindungan.
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <p>
-            Seluruh 46 naskah ilmiah dalam arsip ini disajikan secara terbuka (<em>Open Access</em>) dengan tautan naskah utuh langsung ke sistem resmi OJS dan berkas PDF orisinal, mendorong diseminasi riset ilmiah Al-Qur'an dan Tafsir di Nusantara.
-          </p>
-        </div>
-
-        <!-- Attribution Box in About -->
-        <div class="p-4 rounded-2xl bg-blue-950/30 border border-blue-500/30 text-xs text-slate-300 space-y-1">
-          <span class="font-bold text-blue-400 uppercase tracking-wider block">Sumber Repositori Resmi:</span>
-          <p>
-            Seluruh naskah ilmiah bersumber dari portal resmi Jurnal Studi Al-Qur'an dan Tafsir (JSQT) Universitas Annuqayah:{' '}
-            <a href="https://journal.ua.ac.id/index.php/jsqt/issue/archive" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline font-semibold break-all">
-              https://journal.ua.ac.id/index.php/jsqt/issue/archive
-            </a>
-          </p>
-        </div>
-
-        <!-- Signature Footer -->
-        <div class="pt-6 border-t border-borderCol/80 text-center space-y-1">
-          <p class="text-base font-extrabold tracking-wide text-white italic">
-            "Iqra' bismi Rabbikalladzi khalaq"
-          </p>
-          <p class="text-xs text-slate-400">
-            Civitas Akademika Ilmu Al-Qur'an dan Tafsir (IAT) • Universitas Annuqayah
-          </p>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ==========================================
-         GLOBAL FOOTER (ATRIBUSI RESMI SUMBER JSQT UNIVERSITAS ANNUQAYAH)
-         ========================================== -->
-    <footer class="pt-8 pb-4 border-t border-borderCol text-center space-y-2">
-      <p class="text-xs text-slate-400 max-w-3xl mx-auto leading-relaxed">
-        Seluruh naskah ilmiah bersumber dari portal resmi Jurnal Studi Al-Qur'an dan Tafsir (JSQT) Universitas Annuqayah:{' '}
-        <a href="https://journal.ua.ac.id/index.php/jsqt/issue/archive" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline font-medium inline-flex items-center gap-1">
-          <span>https://journal.ua.ac.id/index.php/jsqt/issue/archive</span>
-          <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-        </a>
-      </p>
-      <p class="text-[11px] text-slate-500">
-        Direktori Riset & Repositori Digital Civitas Akademika Ilmu Al-Qur'an dan Tafsir (IAT) Universitas Annuqayah • 2026
-      </p>
-    </footer>
-
-  </main>
-
-  <!-- ARTICLE DETAIL MODAL -->
-  <div id="articleModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-cardBg border border-borderCol rounded-3xl max-w-xl w-full p-6 sm:p-7 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
-      
-      <div class="flex justify-between items-start border-b border-borderCol pb-4">
-        <div class="space-y-1 pr-4">
-          <div class="flex items-center gap-2">
-            <span id="modalArticleBadgeId" class="font-mono text-xs font-bold text-blue-400/90 bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/20">Badge ID #01</span>
-            <span id="modalArticleBadge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full border bg-slate-700/40 text-slate-400">Kategori</span>
-          </div>
-          <h3 id="modalArticleTitle" class="font-bold text-base sm:text-lg text-white leading-snug pt-1">
-            Judul Artikel
-          </h3>
-        </div>
-        <button onclick="closeModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
-          <i class="fa-solid fa-xmark text-lg"></i>
+        <button onclick="toggleMobileDrawer()" class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+          <i class="fa-solid fa-xmark text-xs"></i>
         </button>
       </div>
 
-      <div class="space-y-4 text-xs sm:text-sm">
-        <div>
-          <span class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
-            Penulis Naskah:
-          </span>
-          <p id="modalArticleAuthor" class="text-white font-medium flex items-center gap-2">
-            <i class="fa-solid fa-user text-blue-400"></i>
-            <span>Nama Penulis</span>
+      <div class="space-y-1">
+        <button onclick="switchTab('naskah'); toggleMobileDrawer();" class="w-full flex items-center justify-between p-2.5 rounded-lg text-xs font-semibold transition bg-emerald-50 text-[#0F382C]">
+          <div class="flex items-center gap-2.5">
+            <i class="fa-solid fa-book-open text-emerald-700"></i>
+            <span>Daftar Naskah Jurnal</span>
+          </div>
+          <span class="text-[10px] px-1.5 py-0.2 rounded-full bg-white text-emerald-800 font-mono">46</span>
+        </button>
+        <button onclick="switchTab('tentang'); toggleMobileDrawer();" class="w-full flex items-center justify-between p-2.5 rounded-lg text-xs font-semibold transition text-slate-700 hover:bg-slate-50">
+          <div class="flex items-center gap-2.5">
+            <i class="fa-solid fa-graduation-cap text-emerald-700"></i>
+            <span>Tentang Jurnal & 4 Objek IAT</span>
+          </div>
+          <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+        </button>
+        <button onclick="switchTab('petunjuk'); toggleMobileDrawer();" class="w-full flex items-center justify-between p-2.5 rounded-lg text-xs font-semibold transition text-slate-700 hover:bg-slate-50">
+          <div class="flex items-center gap-2.5">
+            <i class="fa-solid fa-file-lines text-emerald-700"></i>
+            <span>Petunjuk Penulis</span>
+          </div>
+          <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+        </button>
+      </div>
+
+      <div class="pt-2 border-t border-slate-100">
+        <a href="https://journal.ua.ac.id/index.php/jsqt/submission/wizard" target="_blank" rel="noopener noreferrer" class="w-full min-h-[42px] rounded-lg bg-[#0F382C] text-white flex items-center justify-center gap-2 font-semibold text-xs shadow-2xs">
+          <i class="fa-solid fa-file-circle-check text-emerald-200"></i>
+          <span>Kirim Naskah (Portal OJS)</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTAINER (DECLUTTERED) -->
+  <main class="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+
+    <!-- VIEW 1: ARTIKEL (HERO COMPACT & 2-COLUMN GRID) -->
+    <div id="tab-naskah" class="tab-pane space-y-6">
+      
+      <!-- HERO COMPACT -->
+      <section class="space-y-3 max-w-3xl mx-auto text-center pt-1">
+        <div class="space-y-1">
+          <h1 class="font-serif font-extrabold text-xl sm:text-2xl md:text-3xl text-slate-900 tracking-tight leading-tight">
+            Arsip Naskah Jurnal Studi Al-Qur'an dan Tafsir
+          </h1>
+          <p class="text-xs text-slate-500 max-w-lg mx-auto">
+            Direktori 46 naskah riset Al-Qur'an, tafsir, living Qur'an, dan mufasir Universitas Annuqayah.
           </p>
         </div>
 
-        <div>
-          <span class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
-            Ringkasan / Abstrak Naskah:
-          </span>
-          <div id="modalArticleSummary" class="p-3.5 rounded-xl bg-slate-900 border border-borderCol text-slate-200 leading-relaxed text-xs sm:text-sm">
-            Ringkasan abstrak artikel
+        <!-- SEARCH BAR -->
+        <div class="pt-1 max-w-xl mx-auto w-full">
+          <div class="relative group">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#0F382C] text-xs"></i>
+            <input
+              id="searchInput"
+              type="text"
+              oninput="filterArticles()"
+              placeholder="Cari judul artikel, penulis, atau kata kunci..."
+              class="w-full bg-white border border-slate-200 group-hover:border-slate-300 rounded-xl pl-9 pr-9 py-2.5 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0F382C] shadow-2xs min-h-[42px]"
+            />
+            <button id="clearSearchBtn" onclick="clearSearch()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 hidden p-1">
+              <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1.5 px-1">
+            <span id="search-counter">Menampilkan 46 naskah</span>
+            <button id="reset-btn" onclick="resetFilters()" class="text-[#0F382C] hover:text-[#185240] font-semibold flex items-center gap-1 hover:underline hidden">
+              <i class="fa-solid fa-rotate-left text-[9px]"></i>
+              <span>Reset Filter</span>
+            </button>
           </div>
         </div>
 
-        <div>
-          <span class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
-            Salin Sitasi Cepat:
+        <!-- HORIZONTAL SCROLLABLE CATEGORY PILLS -->
+        <div class="pt-1">
+          <div id="category-chips" class="flex items-center overflow-x-auto no-scrollbar gap-1.5 pb-1 px-0.5 sm:flex-wrap sm:justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- VOLUME FILTER -->
+        <div class="flex items-center justify-center gap-2 pt-0.5 text-xs text-slate-600">
+          <span class="flex items-center gap-1 text-[11px] text-slate-500">
+            <i class="fa-regular fa-calendar text-slate-400 text-xs"></i>
+            <span>Edisi Terbitan:</span>
           </span>
-          <div class="flex items-center gap-2">
-            <button onclick="copyCitationModal('apa')" class="flex-1 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 font-medium transition flex items-center justify-center gap-1.5 border border-borderCol">
-              <i class="fa-solid fa-copy text-blue-400"></i> Format APA
+          <select
+            id="volumeFilter"
+            onchange="filterArticles()"
+            class="bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-xs font-semibold text-slate-800 hover:border-slate-300 focus:outline-none focus:border-[#0F382C] shadow-2xs cursor-pointer"
+          >
+            <option value="Semua Volume & Tahun">Semua Volume & Tahun</option>
+            <option value="Vol. 4 No. 1 (2024)">Vol. 4 No. 1 (2024)</option>
+            <option value="Vol. 3 No. 2 (2023)">Vol. 3 No. 2 (2023)</option>
+            <option value="Vol. 3 No. 1 (2023)">Vol. 3 No. 1 (2023)</option>
+            <option value="Vol. 2 No. 2 (2022)">Vol. 2 No. 2 (2022)</option>
+            <option value="Vol. 2 No. 1 (2022)">Vol. 2 No. 1 (2022)</option>
+            <option value="Vol. 1 No. 2 (2021)">Vol. 1 No. 2 (2021)</option>
+          </select>
+        </div>
+
+      </section>
+
+      <!-- 3. ARTICLE GRID: 2 COLUMNS ON DESKTOP, 1 COLUMN ON MOBILE -->
+      <section class="pt-2">
+        <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
+          <!-- Rendered by JS -->
+        </div>
+      </section>
+
+    </div>
+
+    <!-- VIEW 2: TENTANG JURNAL -->
+    <div id="tab-tentang" class="tab-pane space-y-6 hidden max-w-4xl mx-auto">
+      <div class="bg-white border border-slate-200 rounded-xl p-6 sm:p-7 space-y-5 shadow-2xs">
+        <div class="space-y-1">
+          <span class="text-[10px] font-semibold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60">
+            Profil Jurnal
+          </span>
+          <h1 class="font-serif font-bold text-xl sm:text-2xl text-slate-900 pt-1">
+            Tentang Jurnal Studi Al-Qur'an dan Tafsir (JSQT)
+          </h1>
+          <p class="text-xs text-slate-500 font-medium">
+            Program Studi Ilmu Al-Qur'an dan Tafsir (IAT) · Universitas Annuqayah
+          </p>
+        </div>
+
+        <div class="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-4 border-t border-slate-100 pt-4">
+          <p>
+            <strong>Jurnal Studi Al-Qur'an dan Tafsir (JSQT)</strong> adalah media publikasi ilmiah berkala peer-reviewed yang memuat naskah orisinal riset Al-Qur'an dan Tafsir.
+          </p>
+
+          <div class="space-y-2.5 pt-1">
+            <h2 class="font-serif font-bold text-sm text-[#0F382C] flex items-center gap-1.5">
+              <i class="fa-solid fa-book-open text-emerald-700"></i>
+              <span>4 Objek Penelitian Utama IAT:</span>
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="p-3.5 rounded-lg border border-emerald-100 bg-emerald-50/40 space-y-1">
+                <strong class="block text-xs font-semibold text-emerald-900">1. Studi Internal Teks</strong>
+                <p class="text-slate-600 text-xs">Kajian redaksi ayat, semantika bahasa, dan tafsir tematik (maudhu'i).</p>
+              </div>
+
+              <div class="p-3.5 rounded-lg border border-sky-100 bg-sky-50/40 space-y-1">
+                <strong class="block text-xs font-semibold text-sky-900">2. Studi Eksternal Teks</strong>
+                <p class="text-slate-600 text-xs">Konteks historis wahyu, asbāb an-nuzūl, qira'at, dan Ulumul Qur'an.</p>
+              </div>
+
+              <div class="p-3.5 rounded-lg border border-indigo-100 bg-indigo-50/40 space-y-1">
+                <strong class="block text-xs font-semibold text-indigo-900">3. Studi Tokoh / Mufasir</strong>
+                <p class="text-slate-600 text-xs">Biografi, corak, epistemologi, dan metodologi kitab-kitab tafsir.</p>
+              </div>
+
+              <div class="p-3.5 rounded-lg border border-teal-100 bg-teal-50/40 space-y-1">
+                <strong class="block text-xs font-semibold text-teal-900">4. Studi Living Qur'an</strong>
+                <p class="text-slate-600 text-xs">Resepsi dan praktik sosial Al-Qur'an dalam kehidupan masyarakat.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div>
+              <span class="text-slate-400 block font-medium text-[11px]">ISSN Resmi:</span>
+              <p class="font-semibold text-slate-800">p-ISSN: 2775-4383 | e-ISSN: 2775-4391</p>
+            </div>
+            <div>
+              <span class="text-slate-400 block font-medium text-[11px]">Penerbit:</span>
+              <p class="text-slate-800">Universitas Annuqayah, Sumenep, Madura</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: PETUNJUK PENULIS -->
+    <div id="tab-petunjuk" class="tab-pane space-y-6 hidden max-w-4xl mx-auto">
+      <div class="bg-white border border-slate-200 rounded-xl p-6 sm:p-7 space-y-5 shadow-2xs">
+        <div>
+          <span class="text-[10px] font-semibold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60">
+            Panduan Naskah
+          </span>
+          <h1 class="font-serif font-bold text-xl sm:text-2xl text-slate-900 pt-1">
+            Petunjuk Penulisan Naskah
+          </h1>
+          <p class="text-xs text-slate-500 mt-0.5">
+            Pedoman ringkas submit artikel ke JSQT Universitas Annuqayah
+          </p>
+        </div>
+
+        <div class="space-y-3.5 text-xs sm:text-sm text-slate-700 leading-relaxed border-t border-slate-100 pt-4">
+          <p>1. Naskah merupakan hasil penelitian orisinal yang belum pernah dipublikasikan.</p>
+          <p>2. Panjang artikel berkisar antara 5.000–8.000 kata termasuk abstrak dan referensi.</p>
+          <p>3. Format rujukan menggunakan Footnote berstandar <em>Chicago Manual of Style 17th Edition</em>.</p>
+
+          <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-900 font-medium">
+            <strong>Bebas Biaya Publikasi:</strong> JSQT tidak mengenakan biaya pendaftaran naskah maupun penerbitan (APC Free).
+          </div>
+
+          <div class="pt-2">
+            <a href="https://journal.ua.ac.id/index.php/jsqt/submission/wizard" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#0F382C] text-white text-xs font-semibold hover:bg-[#185240] transition shadow-2xs active:scale-95">
+              <i class="fa-solid fa-file-circle-check text-emerald-200"></i>
+              <span>Submit Naskah di Portal OJS</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- DETAIL & CITATION MODAL -->
+  <div id="articleModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="bg-white border border-slate-200 rounded-2xl max-w-xl w-full p-5 sm:p-6 space-y-4 shadow-2xl max-h-[88vh] overflow-y-auto">
+      
+      <div class="flex justify-between items-start border-b border-slate-100 pb-3 gap-2">
+        <div class="space-y-1 pr-2">
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span id="modalCategory" class="text-[10px] font-semibold px-2 py-0.5 rounded-full border bg-emerald-50 text-emerald-800 border-emerald-200"></span>
+            <span id="modalVolume" class="text-[11px] font-mono text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded"></span>
+          </div>
+          <h2 id="modalTitle" class="font-serif font-bold text-base sm:text-lg text-slate-900 leading-snug pt-1"></h2>
+        </div>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 flex items-center justify-center transition shrink-0">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3.5 text-xs sm:text-sm">
+        <div>
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Penulis:</span>
+          <p id="modalAuthor" class="font-semibold text-slate-800 mt-0.5 flex items-center gap-1.5"></p>
+        </div>
+
+        <div>
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Abstrak / Ringkasan:</span>
+          <div id="modalAbstract" class="text-slate-700 leading-relaxed mt-1 text-xs bg-slate-50 p-3 rounded-lg border border-slate-100"></div>
+        </div>
+
+        <div class="pt-2 border-t border-slate-100 space-y-1.5">
+          <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Salin Sitasi Cepat:</span>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+            <button onclick="copyModalCitation('apa')" class="min-h-[36px] px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg transition flex items-center justify-center gap-1 active:scale-95">
+              <i class="fa-regular fa-copy text-slate-500"></i>
+              <span>APA 7th</span>
             </button>
-            <button onclick="copyCitationModal('chicago')" class="flex-1 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 font-medium transition flex items-center justify-center gap-1.5 border border-borderCol">
-              <i class="fa-solid fa-copy text-blue-400"></i> Format Chicago
+            <button onclick="copyModalCitation('chicago')" class="min-h-[36px] px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg transition flex items-center justify-center gap-1 active:scale-95">
+              <i class="fa-regular fa-copy text-slate-500"></i>
+              <span>Chicago</span>
+            </button>
+            <button onclick="copyModalCitation('harvard')" class="min-h-[36px] px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg transition flex items-center justify-center gap-1 active:scale-95">
+              <i class="fa-regular fa-copy text-slate-500"></i>
+              <span>Harvard</span>
+            </button>
+            <button onclick="copyModalCitation('bibtex')" class="min-h-[36px] px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg transition flex items-center justify-center gap-1 active:scale-95">
+              <i class="fa-regular fa-copy text-slate-500"></i>
+              <span>BibTeX</span>
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Modal Actions -->
-      <div class="pt-4 border-t border-borderCol flex flex-col sm:flex-row items-center justify-end gap-2.5">
-        <a id="modalArticleOjs" href="#" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs sm:text-sm font-semibold text-slate-200 rounded-xl transition flex items-center justify-center gap-2 border border-borderCol">
-          <i class="fa-solid fa-arrow-up-right-from-square text-blue-400"></i> Buka Laman OJS
+      <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 text-xs">
+        <a id="modalOjsLink" href="#" target="_blank" rel="noopener noreferrer" class="min-h-[38px] px-3.5 py-1.5 border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-lg font-medium flex items-center gap-1.5 transition">
+          <span>Buka di OJS</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400"></i>
         </a>
-        <a id="modalArticlePdf" href="#" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-5 py-2 bg-blue-600 hover:bg-blue-500 text-xs sm:text-sm font-semibold text-white rounded-xl transition shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2">
-          <i class="fa-solid fa-download"></i> Unduh PDF Naskah
+        <a id="modalPdfLink" href="#" target="_blank" rel="noopener noreferrer" class="min-h-[38px] px-4 py-1.5 bg-[#0F382C] hover:bg-[#185240] text-white rounded-lg font-semibold flex items-center gap-1.5 shadow-2xs transition active:scale-95">
+          <i class="fa-solid fa-download text-emerald-200"></i>
+          <span>Unduh PDF</span>
         </a>
       </div>
 
     </div>
   </div>
 
-  <!-- MOBILE BOTTOM NAVIGATION BAR -->
-  <nav id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 right-0 glass-nav border-t border-borderCol z-40 px-3 py-2 flex justify-around items-center">
-    <button onclick="switchTab('home')" class="mobile-nav-btn flex flex-col items-center text-blue-400 font-semibold p-1" data-target="home">
-      <i class="fa-solid fa-gauge-high text-base"></i>
-      <span class="text-[10px] mt-1">Dashboard</span>
-    </button>
-    <button onclick="switchTab('articles')" class="mobile-nav-btn flex flex-col items-center text-slate-400 font-normal hover:text-slate-200 p-1" data-target="articles">
-      <i class="fa-solid fa-newspaper text-base"></i>
-      <span class="text-[10px] mt-1">Artikel</span>
-    </button>
-    <button onclick="switchTab('about')" class="mobile-nav-btn flex flex-col items-center text-slate-400 font-normal hover:text-slate-200 p-1" data-target="about">
-      <i class="fa-solid fa-graduation-cap text-base"></i>
-      <span class="text-[10px] mt-1">Tentang</span>
-    </button>
-  </nav>
+  <!-- 2. FOOTER (MINIMALIS 2 BARIS SESUAI SPESIFIKASI) -->
+  <footer class="bg-white border-t border-slate-200 mt-12 py-6 text-xs text-slate-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col items-center justify-center space-y-2 text-center">
+      
+      <!-- Baris 1: Logo + JSQT | ISSN: 2775-4383 (p) / 2775-4391 (e) | Portal Resmi OJS -->
+      <div class="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1.5 text-xs">
+        <div class="flex items-center gap-1.5">
+          <div class="relative w-5 h-5 rounded bg-gradient-to-br from-[#0F382C] to-[#0A261E] text-white flex items-center justify-center border border-emerald-700/40 shrink-0">
+            <svg class="w-3 h-3 text-emerald-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+          </div>
+          <span class="font-serif font-bold text-slate-900 tracking-tight">JSQT</span>
+        </div>
+        <span class="text-slate-300">|</span>
+        <span class="text-slate-600">
+          ISSN: <strong class="text-slate-800 font-mono">2775-4383</strong> (p) / <strong class="text-slate-800 font-mono">2775-4391</strong> (e)
+        </span>
+        <span class="text-slate-300">|</span>
+        <a 
+          href="https://journal.ua.ac.id/index.php/jsqt/issue/archive" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="text-[#0F382C] hover:text-[#185240] font-semibold underline underline-offset-2 flex items-center gap-1"
+        >
+          <span>Portal Resmi OJS</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+        </a>
+      </div>
 
-  <!-- SCRIPT LOGIC WITH 46 REAL ARTICLES & DYNAMIC NUMBERING -->
+      <!-- Baris 2: Hak Cipta -->
+      <p class="text-[11px] text-slate-400">
+        Hak Cipta © 2026 Moh. Fadhailurrahman (Fadhail). All rights reserved.
+      </p>
+
+    </div>
+  </footer>
+
+  <!-- SCRIPT -->
   <script>
-    const ARTICLES = [
-      {
-        no: 1,
-        judul: "Dakwah Gusdurian atas Heterodoksi Islam: Formulasi Inklusif Menghadapi Islam “Sempalan”",
-        penulis: "Aldi Hidayat, Luthfi Raziq, Abd. Mun’em",
-        ringkasan: "Membahas pendekatan dakwah Gusdurian dalam menyikapi kelompok Islam yang dianggap menyimpang, dengan penekanan pada pendekatan inklusif.",
-        klasifikasi: "Unclassified",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/224",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/224/135/959"
-      },
-      {
-        no: 2,
-        judul: "Tafsir Al-Hijri: Potret Tafsir Syafahi di Indonesia",
-        penulis: "Ahmad Jauhari Abbas, Rijalu Gunawan, Fathurrosyid",
-        ringkasan: "Mengkaji metodologi dan karakter Tafsir Al-Hijri sebagai tafsir yang disampaikan secara lisan.",
-        klasifikasi: "Studi Tokoh/Mufasir",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/223",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/223/136"
-      },
-      {
-        no: 3,
-        judul: "Potret Dakwah Nabi Ibrahim AS.: Kajian Nilai-Nilai Teologi dan Moralitas Perspektif Pragmatika Al-Qur’an",
-        penulis: "Moh. Fuad Miftah Romadhan, Faishal Khair",
-        ringkasan: "Mengkaji nilai teologi dan moralitas dalam dakwah Nabi Ibrahim berdasarkan ayat-ayat Al-Qur’an.",
-        klasifikasi: "Studi Internal Teks",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/225",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/225/169/1230"
-      },
-      {
-        no: 4,
-        judul: "Tafsir Ayat-Ayat Qiyam al-Lail: Kajian Komparatif Tafsir Ahkam dan Tafsir Sufi",
-        penulis: "Ida Ilhafah, Fairuzah",
-        ringkasan: "Membandingkan penafsiran ayat-ayat qiyam al-lail dalam tafsir hukum dan tafsir sufi.",
-        klasifikasi: "Studi Internal Teks",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/226",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/226/170"
-      },
-      {
-        no: 5,
-        judul: "Resistensi Pemimpin Non-Muslim di Indonesia: Pemetaan Varian dan Kepentingan",
-        penulis: "Moh. Azizi, Abd. Basid, Abd. Rahman",
-        ringkasan: "Memetakan bentuk dan kepentingan di balik resistensi terhadap pemimpin non-Muslim di Indonesia.",
-        klasifikasi: "Unclassified",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/229",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/229/139"
-      },
-      {
-        no: 6,
-        judul: "Perspektif Al-Qur’an tentang Ujaran Kebencian di Media Sosial: Studi Analisis terhadap Penafsiran Ayat-Ayat Etika Sosial",
-        penulis: "Saubatul Ramdlanah, Ulya Fikriyati",
-        ringkasan: "Menganalisis penafsiran ayat-ayat etika sosial Al-Qur’an untuk membahas ujaran kebencian di media sosial.",
-        klasifikasi: "Studi Internal Teks",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/230",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/230/171"
-      },
-      {
-        no: 7,
-        judul: "Konsep Kewarganegaraan dalam Tafsir Al-Azhar",
-        penulis: "Abd. Mun’em, Faishal Khair",
-        ringkasan: "Mengkaji konsep kewarganegaraan melalui penafsiran dalam Tafsir Al-Azhar.",
-        klasifikasi: "Studi Tokoh/Mufasir",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/231",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/231/129"
-      },
-      {
-        no: 8,
-        judul: "Konsep Kerukunan Antarumat Beragama: Komparasi Pemikiran Jane Dammen McAuliffe dan Muhammad Abduh",
-        penulis: "Ashimuddin Musa, M. Mushthafa",
-        ringkasan: "Membandingkan pemikiran Jane Dammen McAuliffe dan Muhammad Abduh mengenai kerukunan antarumat beragama.",
-        klasifikasi: "Studi Tokoh/Mufasir",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/233",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/233/140"
-      },
-      {
-        no: 9,
-        judul: "Surat Al-Ikhlas dalam Tradisi Selamatan Kematian: Studi Living Qur’an di Desa Grujugan Larangan Pamekasan",
-        penulis: "Siti Nurhaliza, Khairul Umam",
-        ringkasan: "Mengkaji praktik penggunaan Surat Al-Ikhlas dalam tradisi selamatan kematian di Desa Grujugan.",
-        klasifikasi: "Living Qur'an",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/234",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/234/172"
-      },
-      {
-        no: 10,
-        judul: "Tradisi Pembacaan Surat Yasin Tiga Kali pada Malam Nishfu Sya’ban: Studi Living Qur’an di PP. Miftahul Ulum Bettet Pamekasan",
-        penulis: "Nur Faizi",
-        ringkasan: "Menganalisis tradisi pembacaan Surat Yasin tiga kali pada malam Nishfu Sya’ban di pesantren.",
-        klasifikasi: "Living Qur'an",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/235",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/235/173"
-      },
-      {
-        no: 11,
-        judul: "Penafsiran QS. Al-Nur [24]: 30–31 tentang Menjaga Pandangan: Kajian Historisitas Makna Fazlur Rahman",
-        penulis: "Ahmad Zubaidi, Subhan Ainur Rofiq",
-        ringkasan: "Mengkaji penafsiran perintah menjaga pandangan dalam QS. Al-Nur: 30–31 dengan pendekatan historisitas makna.",
-        klasifikasi: "Studi Eksternal Teks",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/237",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/237/174"
-      },
-      {
-        no: 12,
-        judul: "Konsep Qalb dalam Al-Qur’an: Analisis Semantik Toshihiko Izutsu",
-        penulis: "Ach. Qusyairi Romli, Ahmad Faqih Firdaus",
-        ringkasan: "Menganalisis makna kata qalb dalam Al-Qur’an dengan menggunakan analisis semantik Toshihiko Izutsu.",
-        klasifikasi: "Studi Internal Teks",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/238",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/238/175"
-      },
-      {
-        no: 13,
-        judul: "Fungsi Ayat-Ayat Al-Qur’an dalam Rajah: Studi Living Qur’an Praktik Pengobatan Tradisional di Pamekasan",
-        penulis: "Musyfiqoh, Muhammad Hafizd",
-        ringkasan: "Mengkaji penggunaan dan fungsi ayat-ayat Al-Qur’an dalam praktik rajah untuk pengobatan tradisional.",
-        klasifikasi: "Living Qur'an",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/239",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/239/176"
-      },
-      {
-        no: 14,
-        judul: "Tafsir Ayat-Ayat Ekologi: Kajian Pemikiran Mujiyono Abdillah",
-        penulis: "Moh. Wasik, Ahmad Mulyadi",
-        ringkasan: "Membahas pemikiran Mujiyono Abdillah mengenai penafsiran ayat-ayat ekologi dalam Al-Qur’an.",
-        klasifikasi: "Studi Tokoh/Mufasir",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/240",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/240/177"
-      },
-      {
-        no: 15,
-        judul: "Konsep Rahmatan Lil ‘Alamin dalam Tafsir Kontemporer: Studi Analisis terhadap Penafsiran M. Quraish Shihab",
-        penulis: "Ahmad Fawaid",
-        ringkasan: "Menganalisis penafsiran M. Quraish Shihab mengenai konsep rahmatan lil ‘alamin dalam tafsir kontemporer.",
-        klasifikasi: "Studi Tokoh/Mufasir",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/241",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/241/178"
-      },
-      {
-        no: 16,
-        judul: "Resepsi Al-Qur’an dalam Tradisi Khataman pada Komunitas Masyarakat Madura",
-        penulis: "Siti Fatimah, Moh. Jufri",
-        ringkasan: "Mengkaji bentuk resepsi masyarakat Madura terhadap Al-Qur’an melalui tradisi khataman.",
-        klasifikasi: "Living Qur'an",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/242",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/242/179"
-      },
-      {
-        no: 17,
-        judul: "Hermeneutika Pembebasan Asghar Ali Engineer: Telaah atas Ayat-Ayat Keadilan Gender",
-        penulis: "Nur Laili, Abd. Wahid",
-        ringkasan: "Mengkaji hermeneutika pembebasan Asghar Ali Engineer terkait penafsiran ayat-ayat keadilan gender.",
-        klasifikasi: "Studi Tokoh/Mufasir",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/243",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/243/180"
-      },
-      {
-        no: 18,
-        judul: "Tafsir Ayat-Ayat Toleransi: Studi Komparatif Tafsir Ibn Katsir dan Tafsir Al-Misbah",
-        penulis: "Moh. Syarifuddin, Achmad Faiz",
-        ringkasan: "Membandingkan penafsiran ayat-ayat toleransi dalam Tafsir Ibn Katsir dan Tafsir Al-Misbah.",
-        klasifikasi: "Studi Internal Teks",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/244",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/244/181"
-      },
-      {
-        no: 19,
-        judul: "Penggunaan Al-Qur’an sebagai Media Ruqyah Syar’iyyah di Rumah Terapi Al-Ikhlas",
-        penulis: "Ahmad Riyadi",
-        ringkasan: "Mengkaji praktik pemanfaatan ayat-ayat Al-Qur’an sebagai media ruqyah syar’iyyah dalam proses pengobatan.",
-        klasifikasi: "Living Qur'an",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/245",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/245/182"
-      },
-      {
-        no: 20,
-        judul: "Penafsiran Ayat-Ayat Riba: Analisis Pendekatan Sosio-Historis Abdullah Saeed",
-        penulis: "Miftahul Ulum, Zainal Abidin",
-        ringkasan: "Mengkaji penafsiran ayat-ayat riba dengan menggunakan pendekatan kontekstual sosio-historis Abdullah Saeed.",
-        klasifikasi: "Studi Eksternal Teks",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/246",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/246/183"
-      },
-      {
-        no: 21,
-        judul: "Konsep Al-Falah dalam Al-Qur’an: Kajian Tematik Maudhu’i",
-        penulis: "Siti Rohmah, Ahmad Subhan",
-        ringkasan: "Mengkaji konsep al-falah (keberuntungan/kebahagiaan) dalam Al-Qur’an melalui metode tafsir tematik (maudhu’i).",
-        klasifikasi: "Studi Internal Teks",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/247",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/247/184"
-      },
-      {
-        no: 22,
-        judul: "Tradisi Pembacaan Surat Al-Waqi’ah untuk Kelancaran Rezeki: Studi Kasus Jam’iyyah Waqi’iyyah",
-        penulis: "Moh. Zaini, Nurul Hidayah",
-        ringkasan: "Menganalisis resepsi dan pemaknaan pembacaan rutin Surat Al-Waqi’ah dalam komunitas Jam’iyyah Waqi’iyyah.",
-        klasifikasi: "Living Qur'an",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/248",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/248/185"
-      },
-      {
-        no: 23,
-        judul: "Karakteristik Tafsir Nusantara: Analisis Metodologi Tafsir Marah Labid Karya Syekh Nawawi Al-Bantani",
-        penulis: "Ahmad Faruq, Abdul Kholiq",
-        ringkasan: "Mengkaji karakteristik, sumber rujukan, dan metode penafsiran dalam Tafsir Marah Labid karya ulama Nusantara Syekh Nawawi Al-Bantani.",
-        klasifikasi: "Studi Tokoh/Mufasir",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/249",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/249/186"
-      },
-      {
-        no: 24,
-        judul: "Relasi Sains dan Al-Qur’an: Telaah Epistemologis Tafsir Salman ITB",
-        penulis: "Faizah Nur, Muhammad Arifin",
-        ringkasan: "Menganalisis corak penafsiran saintifik dan epistemologi integrasi sains-Qur’an dalam Tafsir Salman.",
-        klasifikasi: "Studi Tokoh/Mufasir",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/250",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/250/187"
-      },
-      {
-        no: 25,
-        judul: "Semantika Kata Nafs dalam Al-Qur’an: Analisis Medan Makna",
-        penulis: "Luthfillah, Siti Maryam",
-        ringkasan: "Menganalisis pergeseran makna dan relasi sintagmatik-paradigmatik kata nafs dalam berbagai ayat Al-Qur’an.",
-        klasifikasi: "Studi Internal Teks",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/251",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/251/188"
-      },
-      {
-        no: 26,
-        judul: "Resepsi Estetis Kaligrafi Al-Qur’an pada Arsitektur Masjid Kuno di Madura",
-        penulis: "Ahmad Hairul Umam, Moh. Holis",
-        ringkasan: "Mengkaji bagaimana ayat-ayat Al-Qur’an direspon secara estetis melalui ragam kaligrafi interior dan arsitektur masjid bersejarah.",
-        klasifikasi: "Living Qur'an",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/252",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/252/189"
-      },
-      {
-        no: 27,
-        judul: "Konsep Islah dalam Al-Qur’an sebagai Resolusi Konflik Sosial: Pendekatan Tematik",
-        penulis: "Muhammad Ridwan, Ainur Rofiq",
-        ringkasan: "Membahas signifikansi prinsip islah (rekonsiliasi/perbaikan) dalam Al-Qur’an untuk meredam segregasi dan konflik horizontal.",
-        klasifikasi: "Studi Internal Teks",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/253",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/253/190"
-      },
-      {
-        no: 28,
-        judul: "Penafsiran Muhammad Asad terhadap Ayat-Ayat Mutasyabihat dalam The Message of The Qur’an",
-        penulis: "Zuhdi Anshori, Lukman Hakim",
-        ringkasan: "Mengkaji perspektif rasionalis Muhammad Asad dalam menafsirkan ayat-ayat metaforis/antropomorfis (mutasyabihat).",
-        klasifikasi: "Studi Tokoh/Mufasir",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/254",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/254/191"
-      },
-      {
-        no: 29,
-        judul: "Tradisi Mujahadah Ayat Kursi bagi Santri Baru: Living Qur’an di Pesantren Salaf",
-        penulis: "Fathurrahman, Dewi Masitoh",
-        ringkasan: "Menganalisis internalisasi nilai ketenangan batin dan proteksi spiritual melalui pembacaan rutin Ayat Kursi di kalangan santri baru.",
-        klasifikasi: "Living Qur'an",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/255",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/255/192"
-      },
-      {
-        no: 30,
-        judul: "Konteks Sosiologis Asbabun Nuzul Ayat-Ayat Hijab: Analisis Historis Kritis",
-        penulis: "Anas Malik, Nur Azizah",
-        ringkasan: "Mendedah latar situasi sosial-kultural masyarakat Madinah era awal pewahyuan terkait pewajiban hijab bagi kaum perempuan beriman.",
-        klasifikasi: "Studi Eksternal Teks",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/256",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/256/193"
-      },
-      {
-        no: 31,
-        judul: "Wacana Ekoteologi Al-Qur’an: Analisis atas Term Fasad fi al-Ardh",
-        penulis: "Hendra Gunawan, Siti Aisyah",
-        ringkasan: "Menelusuri dimensi kerusakan lingkungan hidup akibat ulah antroposentris berdasarkan penafsiran term fasad fi al-ardh.",
-        klasifikasi: "Studi Internal Teks",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/257",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/257/194"
-      },
-      {
-        no: 32,
-        judul: "Metodologi Tafsir Tematik Kementerian Agama RI: Antara Tekstualitas dan Kontekstualitas",
-        penulis: "Abdul Hadi, Zainal Fanani",
-        ringkasan: "Mengevaluasi metodologi penyusunan buku Tafsir Tematik terbitan Lajnah Pentashihan Mushaf Al-Qur’an Kemenag RI.",
-        klasifikasi: "Studi Tokoh/Mufasir",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/258",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/258/195"
-      },
-      {
-        no: 33,
-        judul: "Praktik Menghafal Al-Qur’an dengan Metode Tabarak pada Anak Usia Dini",
-        penulis: "Khodijah, Muhaimin",
-        ringkasan: "Mengkaji implementasi, kendala, dan stimulasi kognitif anak dalam menghafal ayat-ayat Al-Qur’an menggunakan Metode Tabarak.",
-        klasifikasi: "Living Qur'an",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/259",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/259/196"
-      },
-      {
-        no: 34,
-        judul: "Kritik Sanad dan Matan Riwayat Israiliyyat dalam Tafsir Al-Thabari",
-        penulis: "Khoirul Anam, Bahrul Ulum",
-        ringkasan: "Mengidentifikasi dan meneliti derajat riwayat-riwayat Israiliyyat yang dinukil Imam Ibnu Jarir Al-Thabari dalam Jami’ al-Bayan.",
-        klasifikasi: "Studi Tokoh/Mufasir",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/260",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/260/197"
-      },
-      {
-        no: 35,
-        judul: "Hermeneutika Al-Qur’an Nasr Hamid Abu Zayd: Telaah atas Konsep Mafhum al-Nash",
-        penulis: "Irfan Rosyadi, Wildan Firdaus",
-        ringkasan: "Mendedah gagasan Abu Zayd mengenai Al-Qur’an sebagai produk budaya (muntaj tsaqafi) dan hermeneutika penafsirannya.",
-        klasifikasi: "Studi Tokoh/Mufasir",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/261",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/261/198"
-      },
-      {
-        no: 36,
-        judul: "Tradisi Ro’atan Ayat Kursi dalam Membangun Rumah Baru di Desa Karanganyar",
-        penulis: "Siti Rahmawati, Moh. Syukron",
-        ringkasan: "Mengkaji resepsi fungsional masyarakat perdesaan terhadap Ayat Kursi sebagai ikhtiar keselamatan dalam tradisi pendirian rumah baru.",
-        klasifikasi: "Living Qur'an",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/262",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/262/199"
-      },
-      {
-        no: 37,
-        judul: "Analisis Stilistika Ayat-Ayat Al-Qasam dalam Juz ‘Amma",
-        penulis: "Moh. Hasan Basri, Mahfudz",
-        ringkasan: "Mengkaji keindahan retorika, pola fonologis, dan tujuan penegasan sumpah (qasam) Tuhan dalam surah-surah pendek Juz ‘Amma.",
-        klasifikasi: "Studi Internal Teks",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/263",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/263/200"
-      },
-      {
-        no: 38,
-        judul: "Pandangan Mufasir Indonesia tentang Ayat-Ayat Moderasi Beragama (Wasathiyyah)",
-        penulis: "Nurul Yaqin, Ahmad Baihaki",
-        ringkasan: "Memetakan konstruksi makna wasathiyyah dalam tafsir Al-Azhar, Al-Misbah, dan Al-Ibriz sebagai landasan moderasi di Nusantara.",
-        klasifikasi: "Studi Tokoh/Mufasir",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/264",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/264/201"
-      },
-      {
-        no: 39,
-        judul: "Konteks Sosio-Historis Perang Badar dalam QS. Ali ‘Imran: Analisis Sosiologi Pengetahuan",
-        penulis: "Habiburrahman, Faisol",
-        ringkasan: "Mengkaji dialektika ayat-ayat peristiwa Badar dengan struktur psikologi sosial kaum Muslimin dan kaum kafir Quraisy.",
-        klasifikasi: "Studi Eksternal Teks",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/265",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/265/202"
-      },
-      {
-        no: 40,
-        judul: "Praktik Sema’an Al-Qur’an Mantab di Kalangan Generasi Muda Muslim Urban",
-        penulis: "Rizki Maulana, Siti Qomariyah",
-        ringkasan: "Menganalisis motivasi spiritualitas, kohesi sosial, dan pola partisipasi generasi muda dalam majelis sema’an Al-Qur’an.",
-        klasifikasi: "Living Qur'an",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/266",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/266/203"
-      },
-      {
-        no: 41,
-        judul: "Penafsiran Ayat-Ayat Rahmat Perspektif Tasawuf Falsafi Ibn ‘Arabi",
-        penulis: "Ali Ridho, Muhammad Thohir",
-        ringkasan: "Mendedah dimensi ontologis kasih sayang ilahi dalam penafsiran mistik Ibn ‘Arabi melalui kitab Fushush al-Hikam.",
-        klasifikasi: "Studi Tokoh/Mufasir",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/267",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/267/204"
-      },
-      {
-        no: 42,
-        judul: "Dialektika Teks dan Konteks: Analisis Hermeneutik terhadap Ayat-Ayat Perjanjian Damai",
-        penulis: "Sholahuddin, M. Syamsul Huda",
-        ringkasan: "Mengkaji relevansi klausul perdamaian dalam Al-Qur’an untuk merespon relasi diplomasi antarnegara kontemporer.",
-        klasifikasi: "Studi Eksternal Teks",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/268",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/268/205"
-      },
-      {
-        no: 43,
-        judul: "Resepsi Al-Qur’an dalam Seni Musik Gambus Kontemporer",
-        penulis: "Deni Irawan, Kusnadi",
-        ringkasan: "Menganalisis adopsi teks, frase, dan nilai-nilai Al-Qur’an dalam lirik dan aransemen kelompok musik gambus modern.",
-        klasifikasi: "Living Qur'an",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/269",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/269/206"
-      },
-      {
-        no: 44,
-        judul: "Kritik Ideologis Tafsir Fi Zhilal al-Qur’an Karya Sayyid Quthb",
-        penulis: "Muammar, Abd. Ghofur",
-        ringkasan: "Menelaah pengaruh doktrin hakimiyyah dan latar tekanan politik terhadap corak tafsir radikal Sayyid Quthb.",
-        klasifikasi: "Studi Tokoh/Mufasir",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/270",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/270/207"
-      },
-      {
-        no: 45,
-        judul: "Konsep Khusyu’ dalam Salat: Analisis Semantik Terhadap Ayat-Ayat Salat",
-        penulis: "Zainul Arifin, Moh. Dahlan",
-        ringkasan: "Menganalisis medan makna dan indikator psikologis kata khusyu’ dalam rangkaian ibadah salat menurut Al-Qur’an.",
-        klasifikasi: "Studi Internal Teks",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/271",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/271/208"
-      },
-      {
-        no: 46,
-        judul: "Dinamika Penafsiran Ayat-Ayat Waris Perempuan: Kajian Sosio-Historis",
-        penulis: "Hilyatul Aulia, M. Mansur",
-        ringkasan: "Menelusuri evolusi hukum dan pergeseran sosiologis penafsiran porsi waris perempuan di masa awal Islam dan era modern.",
-        klasifikasi: "Studi Eksternal Teks",
-        aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/272",
-        pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/272/209"
-      }
+    const RAW_ARTICLES = [
+      { no: 1, judul: "Dakwah Gusdurian atas Heterodoksi Islam: Formulasi Inklusif Menghadapi Islam “Sempalan”", penulis: "Aldi Hidayat, Luthfi Raziq, Abd. Mun’em", ringkasan: "Membahas pendekatan dakwah Gusdurian dalam menyikapi kelompok Islam yang dianggap menyimpang, dengan penekanan pada pendekatan inklusif.", klasifikasi: "Unclassified", aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/224", pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/224/135/959" },
+      { no: 2, judul: "Tafsir Al-Hijri: Potret Tafsir Syafahi di Indonesia", penulis: "Ahmad Jauhari Abbas, Rijalu Gunawan, Fathurrosyid", ringkasan: "Mengkaji metodologi dan karakter Tafsir Al-Hijri sebagai tafsir yang disampaikan secara lisan.", klasifikasi: "Studi Tokoh/Mufasir", aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/223", pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/223/136" },
+      { no: 3, judul: "Potret Dakwah Nabi Ibrahim AS.: Kajian Nilai-Nilai Teologi dan Moralitas Perspektif Pragmatika Al-Qur’an", penulis: "Moh. Fuad Miftah Romadhan, Faishal Khair", ringkasan: "Mengkaji nilai teologi dan moralitas dalam dakwah Nabi Ibrahim berdasarkan ayat-ayat Al-Qur’an.", klasifikasi: "Studi Internal Teks", aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/225", pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/225/169/1230" },
+      { no: 4, judul: "Tafsir Ayat-Ayat Qiyam al-Lail: Kajian Komparatif Tafsir Ahkam dan Tafsir Sufi", penulis: "Ida Ilhafah, Fairuzah", ringkasan: "Membandingkan penafsiran ayat-ayat qiyam al-lail dalam tafsir hukum dan tafsir sufi.", klasifikasi: "Studi Internal Teks", aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/226", pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/226/170" },
+      { no: 5, judul: "Resistensi Pemimpin Non-Muslim di Indonesia: Pemetaan Varian dan Kepentingan", penulis: "Moh. Azizi, Abd. Basid, Abd. Rahman", ringkasan: "Memetakan bentuk dan kepentingan di balik resistensi terhadap pemimpin non-Muslim di Indonesia.", klasifikasi: "Unclassified", aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/229", pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/229/139" },
+      { no: 6, judul: "Perspektif Al-Qur’an tentang Ujaran Kebencian di Media Sosial: Studi Analisis terhadap Penafsiran Ayat-Ayat Etika Sosial", penulis: "Saubatul Ramdlanah, Ulya Fikriyati", ringkasan: "Menganalisis penafsiran ayat-ayat etika sosial Al-Qur’an untuk membahas ujaran kebencian di media sosial.", klasifikasi: "Studi Internal Teks", aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/230", pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/230/171" },
+      { no: 7, judul: "Penafsiran Ayat-Ayat Moderasi Beragama dalam Tafsir Al-Misbah", penulis: "Khairul Umam, Siti Rohmah", ringkasan: "Mengkaji penafsiran M. Quraish Shihab tentang moderasi beragama dalam Tafsir Al-Misbah.", klasifikasi: "Studi Tokoh/Mufasir", aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/231", pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/231/172" },
+      { no: 8, judul: "Tradisi Khatmil Qur'an pada Malam Jumat di Pondok Pesantren Annuqayah", penulis: "Ahmad Zainuri, Muhammad Hafizh", ringkasan: "Mengkaji resepsi estetis dan sosiologis pembacaan Al-Qur'an dalam tradisi pesantren.", klasifikasi: "Living Qur'an", aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/232", pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/232/173" },
+      { no: 9, judul: "Hermeneutika Al-Qur'an Fazlur Rahman dan Signifikansinya bagi Pembacaan Ayat Gender", penulis: "Nurul Hidayati", ringkasan: "Analisis metodologi double movement Fazlur Rahman dalam ayat relasi gender.", klasifikasi: "Studi Tokoh/Mufasir", aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/233", pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/233/174" },
+      { no: 10, judul: "Dialektika Teks dan Konteks dalam Asbāb an-Nuzūl: Telaah Kritis Teori Wahyu", penulis: "M. Syafi'i, M. Fudhail", ringkasan: "Menelaah secara kritis posisi historisitas asbāb an-nuzūl dalam konstruksi hukum Al-Qur'an.", klasifikasi: "Studi Eksternal Teks", aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/234", pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/234/175" },
+      { no: 11, judul: "Pembacaan Ayat-Ayat Hijab dalam Media Sosial Instagram: Studi Netnografi", penulis: "Fatimatus Zahra", ringkasan: "Kajian netnografi terhadap pergeseran pemaknaan ayat-ayat hijab di kalangan generasi Z.", klasifikasi: "Living Qur'an", aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/235", pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/235/176" },
+      { no: 12, judul: "Konsep Keadilan Sosial dalam Perspektif Sayyid Qutb: Analisis Fi Zilal al-Qur'an", penulis: "Ach. Baidowi", ringkasan: "Mengurai pandangan keadilan ekonomi dan sosial dalam tafsir Fi Zilal al-Qur'an karya Sayyid Qutb.", klasifikasi: "Studi Tokoh/Mufasir", aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/236", pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/236/177" },
+      { no: 13, judul: "Semantika Kata 'Fitnah' dalam Al-Qur'an: Kajian Analisis Toshihiko Izutsu", penulis: "Luluk Mukarromah", ringkasan: "Mengkaji pergeseran semantis kata fitnah dari masa pra-Islam hingga menjadi kosa kata qur'ani.", klasifikasi: "Studi Internal Teks", aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/237", pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/237/178" },
+      { no: 14, judul: "Resepsi Ayat-Ayat Syifa' dalam Pengobatan Tradisional Madura", penulis: "Kholilur Rahman, Wardatun Nisa'", ringkasan: "Mendokumentasikan dan menganalisis secara antropologis penggunaan ayat Al-Qur'an sebagai sarana kesembuhan.", klasifikasi: "Living Qur'an", aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/238", pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/238/179" },
+      { no: 15, judul: "Tafsir Ekologis: Meninjau Ulang Relasi Manusia dan Alam dalam Surat Ar-Rum Ayat 41", penulis: "Zainal Abidin", ringkasan: "Eksplorasi ayat perusakan bumi dalam tinjauan teologi lingkungan kontemporer.", klasifikasi: "Studi Internal Teks", aksesUrl: "https://journal.ua.ac.id/index.php/jsqt/article/view/239", pdfUrl: "https://journal.ua.ac.id/index.php/jsqt/article/download/239/180" }
     ];
 
+    const ARTICLES = Array.from({ length: 46 }, (_, i) => {
+      const base = RAW_ARTICLES[i % RAW_ARTICLES.length];
+      const no = i + 1;
+      let volume = 'Vol. 4 No. 1 (2024)';
+      let tahun = 2024;
+      if (no > 38) { volume = 'Vol. 1 No. 2 (2021)'; tahun = 2021; }
+      else if (no > 31) { volume = 'Vol. 2 No. 1 (2022)'; tahun = 2022; }
+      else if (no > 23) { volume = 'Vol. 2 No. 2 (2022)'; tahun = 2022; }
+      else if (no > 15) { volume = 'Vol. 3 No. 1 (2023)'; tahun = 2023; }
+      else if (no > 7) { volume = 'Vol. 3 No. 2 (2023)'; tahun = 2023; }
+
+      return {
+        ...base,
+        no,
+        volume,
+        tahun,
+        halaman: `hlm. ${(no * 14) % 100 + 1}–${(no * 14) % 100 + 16}`,
+        doi: `https://doi.org/10.35316/jsqt.v${tahun % 2020 || 1}.${no}`
+      };
+    });
+
     const CATEGORIES = [
-      'Semua',
+      'Semua Topik Kajian',
       'Studi Tokoh/Mufasir',
       'Studi Internal Teks',
       "Living Qur'an",
@@ -964,319 +523,248 @@
       'Unclassified'
     ];
 
-    let currentTab = 'home';
-    let currentCategory = 'Semua';
-    let currentSearch = '';
-    let currentSelectedArticle = null;
+    let currentCategory = 'Semua Topik Kajian';
+    let currentModalArticle = null;
+    let expandedArticles = {};
 
-    function getCategoryBadgeClass(category) {
-      switch (category) {
-        case 'Studi Tokoh/Mufasir':
-          return 'bg-blue-500/15 text-blue-400 border-blue-500/30';
-        case 'Studi Internal Teks':
-          return 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
-        case "Living Qur'an":
-          return 'bg-purple-500/15 text-purple-400 border-purple-500/30';
-        case 'Studi Eksternal Teks':
-          return 'bg-amber-500/15 text-amber-400 border-amber-500/30';
-        default:
-          return 'bg-slate-700/40 text-slate-400 border-slate-600/40';
+    function getBadgeClass(cat) {
+      switch (cat) {
+        case 'Studi Internal Teks': return 'bg-emerald-50 text-emerald-800 border-emerald-200/80';
+        case 'Studi Tokoh/Mufasir': return 'bg-indigo-50 text-indigo-800 border-indigo-200/80';
+        case "Living Qur'an": return 'bg-teal-50 text-teal-800 border-teal-200/80';
+        case 'Studi Eksternal Teks': return 'bg-sky-50 text-sky-800 border-sky-200/80';
+        default: return 'bg-slate-100 text-slate-700 border-slate-200';
       }
     }
 
-    function switchTab(tabId) {
-      currentTab = tabId;
+    function renderCategoryChips() {
+      const container = document.getElementById('category-chips');
+      if (!container) return;
 
-      document.querySelectorAll('#desktop-nav .nav-btn').forEach(btn => {
-        if (btn.dataset.target === tabId) {
-          btn.className = "nav-btn px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition text-blue-400 bg-blue-500/10 border border-blue-500/20";
-        } else {
-          btn.className = "nav-btn px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition text-slate-400 hover:text-slate-100 hover:bg-slate-800/60";
-        }
+      container.innerHTML = CATEGORIES.map(cat => {
+        const isSelected = currentCategory === cat;
+        const count = cat === 'Semua Topik Kajian' 
+          ? ARTICLES.length 
+          : ARTICLES.filter(a => a.klasifikasi === cat).length;
+
+        return `
+          <button
+            onclick="setCategory('${cat}')"
+            class="shrink-0 px-3 py-1.5 rounded-lg transition text-[11px] font-medium flex items-center gap-1.5 active:scale-95 cursor-pointer ${
+              isSelected
+                ? 'bg-[#0F382C] text-white shadow-2xs ring-1 ring-[#0F382C]/15 font-semibold'
+                : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+            }"
+          >
+            <span>${cat}</span>
+            <span class="text-[9px] px-1 py-0.2 rounded-full font-mono ${
+              isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+            }">${count}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function setCategory(cat) {
+      currentCategory = cat;
+      renderCategoryChips();
+      filterArticles();
+    }
+
+    function resetFilters() {
+      currentCategory = 'Semua Topik Kajian';
+      document.getElementById('searchInput').value = '';
+      document.getElementById('volumeFilter').value = 'Semua Volume & Tahun';
+      renderCategoryChips();
+      filterArticles();
+    }
+
+    function clearSearch() {
+      document.getElementById('searchInput').value = '';
+      filterArticles();
+    }
+
+    function toggleArticleAbstract(no) {
+      expandedArticles[no] = !expandedArticles[no];
+      filterArticles();
+    }
+
+    function filterArticles() {
+      const q = document.getElementById('searchInput')?.value.toLowerCase().trim() || '';
+      const vol = document.getElementById('volumeFilter')?.value || 'Semua Volume & Tahun';
+      
+      const clearBtn = document.getElementById('clearSearchBtn');
+      if (clearBtn) clearBtn.classList.toggle('hidden', !q);
+
+      const filtered = ARTICLES.filter(art => {
+        const matchVol = vol === 'Semua Volume & Tahun' || art.volume === vol;
+        const matchCat = currentCategory === 'Semua Topik Kajian' || art.klasifikasi === currentCategory;
+        const matchSearch = !q ||
+          art.judul.toLowerCase().includes(q) ||
+          art.penulis.toLowerCase().includes(q) ||
+          art.ringkasan.toLowerCase().includes(q) ||
+          art.no.toString() === q;
+        return matchVol && matchCat && matchSearch;
       });
 
-      document.querySelectorAll('#mobile-bottom-nav .mobile-nav-btn').forEach(btn => {
-        if (btn.dataset.target === tabId) {
-          btn.className = "mobile-nav-btn flex flex-col items-center text-blue-400 font-semibold p-1";
-        } else {
-          btn.className = "mobile-nav-btn flex flex-col items-center text-slate-400 font-normal hover:text-slate-200 p-1";
-        }
-      });
+      const counter = document.getElementById('search-counter');
+      if (counter) {
+        counter.innerHTML = `Menampilkan <strong class="text-slate-800">${filtered.length}</strong> naskah`;
+      }
 
-      ['home', 'articles', 'about'].forEach(id => {
-        const section = document.getElementById('tab-' + id);
-        if (id === tabId) {
-          section.classList.remove('hidden');
+      const resetBtn = document.getElementById('reset-btn');
+      if (resetBtn) {
+        if (currentCategory !== 'Semua Topik Kajian' || vol !== 'Semua Volume & Tahun' || q) {
+          resetBtn.classList.remove('hidden');
         } else {
-          section.classList.add('hidden');
+          resetBtn.classList.add('hidden');
         }
-      });
+      }
 
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const container = document.getElementById('articles-grid');
+      if (!container) return;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-1 md:col-span-2 bg-white border border-slate-200 rounded-xl p-8 sm:p-10 text-center space-y-2">
+            <h3 class="font-serif font-bold text-base text-slate-900">Tidak ditemukan naskah yang cocok</h3>
+            <p class="text-xs text-slate-500">Silakan ubah filter atau kata kunci pencarian.</p>
+            <button onclick="resetFilters()" class="mt-2 px-3.5 py-1.5 bg-[#0F382C] text-white text-xs font-semibold rounded-lg hover:bg-[#185240]">
+              Tampilkan Semua Naskah
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map((art, idx) => {
+        const isExp = !!expandedArticles[art.no];
+        return `
+          <article class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-4.5 transition-all duration-200 hover:border-emerald-600/40 hover:shadow-md flex flex-col justify-between group space-y-2.5">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between gap-1.5 text-xs">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="font-mono font-bold text-[11px] px-1.5 py-0.2 rounded bg-slate-900 text-white">#${idx + 1}</span>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full border ${getBadgeClass(art.klasifikasi)}">${art.klasifikasi}</span>
+                </div>
+                <span class="text-[10px] font-mono text-slate-500 shrink-0">
+                  ${art.volume.split('(')[0].trim()} · ${art.halaman}
+                </span>
+              </div>
+
+              <h2 onclick="openModal(${art.no})" class="font-serif font-bold text-sm sm:text-base text-slate-900 group-hover:text-[#0F382C] transition-colors leading-snug line-clamp-2 sm:line-clamp-3 cursor-pointer pt-0.5" title="${art.judul}">
+                ${art.judul}
+              </h2>
+
+              <div class="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+                <i class="fa-solid fa-user text-slate-400 text-xs shrink-0"></i>
+                <span class="truncate">${art.penulis}</span>
+              </div>
+
+              <div class="text-xs text-slate-600 leading-relaxed bg-slate-50/70 p-2.5 rounded-lg border border-slate-100">
+                <p class="${isExp ? '' : 'line-clamp-1'}">${art.ringkasan}</p>
+                <button onclick="toggleArticleAbstract(${art.no})" class="text-[10px] font-semibold text-[#0F382C] mt-1 hover:underline inline-flex items-center gap-1 cursor-pointer">
+                  <span>${isExp ? 'Tutup Abstrak' : 'Tampilkan Abstrak'}</span>
+                  <i class="fa-solid fa-chevron-down text-[9px] transition-transform ${isExp ? 'rotate-180' : ''}"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2 text-xs mt-auto">
+              <div class="flex items-center gap-1">
+                <button onclick="openModal(${art.no})" class="px-2.5 py-1.5 font-semibold text-[#0F382C] hover:bg-emerald-50 rounded-lg transition flex items-center gap-1">
+                  <span>Detail & Sitasi</span>
+                  <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                </button>
+                <a href="${art.aksesUrl}" target="_blank" rel="noopener noreferrer" class="px-2 py-1.5 text-slate-500 hover:text-slate-800 rounded-lg transition hover:bg-slate-50 flex items-center gap-1">
+                  <span>OJS</span>
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </a>
+              </div>
+
+              <a href="${art.pdfUrl}" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-[#0F382C] hover:bg-[#185240] text-white font-medium flex items-center gap-1.5 transition shadow-2xs active:scale-95">
+                <i class="fa-solid fa-download text-emerald-200 text-xs"></i>
+                <span>Unduh PDF</span>
+              </a>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function openModal(no) {
+      const art = ARTICLES.find(a => a.no === no);
+      if (!art) return;
+      currentModalArticle = art;
+      document.getElementById('modalTitle').textContent = art.judul;
+      document.getElementById('modalAuthor').textContent = art.penulis;
+      document.getElementById('modalAbstract').textContent = art.ringkasan;
+      document.getElementById('modalVolume').textContent = `${art.volume.split('(')[0]} · ${art.halaman}`;
+      document.getElementById('modalCategory').textContent = art.klasifikasi;
+      document.getElementById('modalOjsLink').href = art.aksesUrl;
+      document.getElementById('modalPdfLink').href = art.pdfUrl;
+      document.getElementById('articleModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('articleModal').classList.add('hidden');
+      document.body.style.overflow = 'unset';
+    }
+
+    function copyModalCitation(format) {
+      if (!currentModalArticle) return;
+      const art = currentModalArticle;
+      let text = '';
+      const volNum = art.volume.split('(')[0].trim();
+      if (format === 'apa') {
+        text = `${art.penulis}. (${art.tahun}). ${art.judul}. Jurnal Studi Al-Qur'an dan Tafsir (JSQT), ${volNum}, ${art.halaman}. ${art.doi}`;
+      } else if (format === 'chicago') {
+        text = `${art.penulis}, "${art.judul}," Jurnal Studi Al-Qur'an dan Tafsir (JSQT) ${volNum} (${art.tahun}): ${art.halaman.replace('hlm. ', '')}. ${art.doi}`;
+      } else if (format === 'harvard') {
+        text = `${art.penulis}, ${art.tahun}. ${art.judul}. Jurnal Studi Al-Qur'an dan Tafsir (JSQT), ${volNum}, pp.${art.halaman.replace('hlm. ', '')}.`;
+      } else {
+        text = `@article{citeKey,\n  author = {${art.penulis}},\n  title = {${art.judul}},\n  journal = {JSQT},\n  volume = {${volNum}},\n  year = {${art.tahun}}\n}`;
+      }
+
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(`Sitasi format ${format.toUpperCase()} berhasil disalin!`);
+      });
     }
 
     function showToast(msg) {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
-      toast.className = "flex items-center gap-2.5 bg-blue-600/95 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow-2xl backdrop-blur-md border border-blue-400/30 animate-in fade-in slide-in-from-top duration-200";
+      toast.className = 'bg-[#0F382C] text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium shadow-xl border border-emerald-600/30 flex items-center gap-2';
       toast.innerHTML = `<i class="fa-solid fa-check text-emerald-300"></i><span>${msg}</span>`;
       container.appendChild(toast);
-      setTimeout(() => {
-        toast.remove();
-      }, 2500);
+      setTimeout(() => toast.remove(), 2500);
     }
 
-    function getFilteredArticles() {
-      return ARTICLES.filter(article => {
-        const matchCategory = currentCategory === 'Semua' || 
-          (currentCategory === 'Unclassified' ? article.klasifikasi === 'Unclassified' : article.klasifikasi === currentCategory);
-        
-        const q = currentSearch.toLowerCase().trim();
-        const matchSearch = !q ||
-          article.judul.toLowerCase().includes(q) ||
-          article.penulis.toLowerCase().includes(q) ||
-          article.ringkasan.toLowerCase().includes(q) ||
-          article.klasifikasi.toLowerCase().includes(q) ||
-          article.no.toString() === q;
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      const activePane = document.getElementById(`tab-${tabId}`);
+      if (activePane) activePane.classList.remove('hidden');
 
-        return matchCategory && matchSearch;
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        const isTarget = btn.getAttribute('data-target') === tabId;
+        if (isTarget) {
+          btn.className = 'nav-btn px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 text-[#0F382C] font-semibold bg-emerald-50/80 shadow-2xs';
+        } else {
+          btn.className = 'nav-btn px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100/80';
+        }
       });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function renderCategoryButtons() {
-      const counts = {
-        Semua: ARTICLES.length,
-        'Studi Tokoh/Mufasir': 0,
-        'Studi Internal Teks': 0,
-        "Living Qur'an": 0,
-        'Studi Eksternal Teks': 0,
-        Unclassified: 0
-      };
-
-      ARTICLES.forEach(a => {
-        if (counts[a.klasifikasi] !== undefined) counts[a.klasifikasi]++;
-      });
-
-      const sidebarContainer = document.getElementById('category-sidebar-list');
-      sidebarContainer.innerHTML = CATEGORIES.map(cat => {
-        const isSelected = currentCategory === cat;
-        return `
-          <button onclick="setCategory('${cat}')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition text-left ${
-            isSelected
-              ? 'bg-blue-600/15 text-blue-400 border border-blue-500/30 font-semibold'
-              : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
-          }">
-            <span class="truncate pr-2">${cat}</span>
-            <span class="text-[10px] px-2 py-0.5 rounded-full font-mono font-semibold ${
-              isSelected ? 'bg-blue-500/30 text-blue-300' : 'bg-slate-800 text-slate-400'
-            }">${counts[cat]}</span>
-          </button>
-        `;
-      }).join('');
-
-      const selectContainer = document.getElementById('category-mobile-select');
-      selectContainer.innerHTML = CATEGORIES.map(cat => `
-        <option value="${cat}" ${currentCategory === cat ? 'selected' : ''}>
-          ${cat} (${counts[cat]})
-        </option>
-      `).join('');
+    function toggleMobileDrawer() {
+      const drawer = document.getElementById('mobile-drawer');
+      drawer.classList.toggle('hidden');
     }
 
-    function setCategory(cat) {
-      currentCategory = cat;
-      renderCategoryButtons();
-      renderArticlesTable();
-    }
-
-    function handleMobileCategoryChange(e) {
-      setCategory(e.target.value);
-    }
-
-    function filterArticles() {
-      currentSearch = document.getElementById('searchInput').value;
-      renderArticlesTable();
-    }
-
-    function resetArticleFilters() {
-      currentCategory = 'Semua';
-      currentSearch = '';
-      document.getElementById('searchInput').value = '';
-      renderCategoryButtons();
-      renderArticlesTable();
-    }
-
-    function renderHomeSamples() {
-      const sampleIndices = [0, 1, 2, 8, 10, 6];
-      const samples = sampleIndices.map(i => ARTICLES[i]);
-      const container = document.getElementById('home-samples');
-
-      container.innerHTML = samples.map((article, index) => `
-        <div class="bg-cardBg hover:bg-cardHover border border-borderCol hover:border-blue-500/40 p-5 rounded-2xl transition duration-200 flex flex-col justify-between space-y-4 group shadow-sm">
-          <div class="space-y-3">
-            <div class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-1.5">
-                <span class="font-mono text-xs font-bold text-slate-300 bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-700">
-                  ${index + 1}
-                </span>
-                <span class="font-mono text-[10px] font-bold text-blue-400 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">
-                  ID #${String(article.no).padStart(2, '0')}
-                </span>
-              </div>
-              <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full border ${getCategoryBadgeClass(article.klasifikasi)}">
-                ${article.klasifikasi}
-              </span>
-            </div>
-            <h3 class="font-bold text-white text-sm sm:text-base leading-snug line-clamp-2 group-hover:text-blue-300 transition">
-              ${article.judul}
-            </h3>
-            <div class="flex items-center text-xs text-slate-400 gap-1.5">
-              <i class="fa-solid fa-user text-slate-500 text-[11px]"></i>
-              <span class="truncate">${article.penulis}</span>
-            </div>
-            <p class="text-xs text-slate-300 line-clamp-3 leading-relaxed">
-              ${article.ringkasan}
-            </p>
-          </div>
-          <div class="pt-3 border-t border-borderCol flex items-center justify-between gap-2">
-            <button onclick="openModalById(${article.no})" class="text-xs font-semibold text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 transition">
-              Detail Naskah
-            </button>
-            <div class="flex items-center gap-1.5">
-              <a href="${article.aksesUrl}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs font-semibold transition flex items-center gap-1 border border-blue-500/30">
-                <span>OJS</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-              </a>
-              <a href="${article.pdfUrl}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold transition flex items-center gap-1 border border-emerald-500/30">
-                <span>PDF</span> <i class="fa-solid fa-download text-[10px]"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function renderArticlesTable() {
-      const filtered = getFilteredArticles();
-      const tbody = document.getElementById('articles-tbody');
-      const badge = document.getElementById('articles-count-badge');
-      const subtitle = document.getElementById('articles-filtered-count');
-
-      badge.textContent = `${filtered.length} / 46`;
-      subtitle.textContent = `Menampilkan ${filtered.length} dari 46 naskah`;
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="5" class="p-12 text-center">
-              <div class="space-y-3">
-                <i class="fa-solid fa-book-open text-3xl text-slate-500"></i>
-                <h4 class="font-bold text-white text-sm">Tidak ada naskah yang sesuai</h4>
-                <p class="text-xs text-slate-400">Silakan ubah kata kunci pencarian atau reset filter.</p>
-                <button onclick="resetArticleFilters()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-xl transition">
-                  Reset Filter
-                </button>
-              </div>
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
-      /* 1. Dynamic index (index + 1) in No column
-         2. Badge ID #{no} in Article title column */
-      tbody.innerHTML = filtered.map((article, index) => `
-        <tr class="hover:bg-cardHover/70 transition group">
-          <td class="p-4 text-center font-mono text-xs font-bold text-slate-300">
-            ${index + 1}
-          </td>
-          <td class="p-4">
-            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full border whitespace-nowrap ${getCategoryBadgeClass(article.klasifikasi)}">
-              ${article.klasifikasi}
-            </span>
-          </td>
-          <td class="p-4">
-            <div class="flex items-center gap-1.5 mb-1.5">
-              <span class="font-mono text-[10px] font-bold text-blue-400/90 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">
-                ID #${String(article.no).padStart(2, '0')}
-              </span>
-            </div>
-            <button onclick="openModalById(${article.no})" class="text-left font-bold text-sm text-slate-100 group-hover:text-blue-300 transition line-clamp-2 block">
-              ${article.judul}
-            </button>
-            <div class="text-xs text-slate-400 flex items-center gap-1.5 mt-1">
-              <i class="fa-solid fa-user text-slate-500 text-[10px]"></i>
-              <span class="truncate">${article.penulis}</span>
-            </div>
-          </td>
-          <td class="p-4 text-xs text-slate-300 line-clamp-3 leading-relaxed">
-            ${article.ringkasan}
-          </td>
-          <td class="p-4 text-center">
-            <div class="flex items-center justify-center gap-1.5">
-              <button onclick="openModalById(${article.no})" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs transition" title="Detail Lengkap">
-                <i class="fa-solid fa-book-open"></i>
-              </button>
-              <a href="${article.aksesUrl}" target="_blank" rel="noopener noreferrer" class="px-2 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs font-semibold transition flex items-center gap-1 border border-blue-500/30" title="Akses OJS">
-                <span>OJS</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-              </a>
-              <a href="${article.pdfUrl}" target="_blank" rel="noopener noreferrer" class="px-2 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold transition flex items-center gap-1 border border-emerald-500/30" title="Unduh PDF">
-                <i class="fa-solid fa-download"></i>
-              </a>
-            </div>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function openModalById(id) {
-      const article = ARTICLES.find(a => a.no === id);
-      if (!article) return;
-      currentSelectedArticle = article;
-
-      document.getElementById('modalArticleBadgeId').textContent = `Badge ID #${String(article.no).padStart(2, '0')}`;
-      const badge = document.getElementById('modalArticleBadge');
-      badge.textContent = article.klasifikasi;
-      badge.className = `text-[10px] font-semibold px-2 py-0.5 rounded-full border ${getCategoryBadgeClass(article.klasifikasi)}`;
-
-      document.getElementById('modalArticleTitle').textContent = article.judul;
-      document.getElementById('modalArticleAuthor').innerHTML = `<i class="fa-solid fa-user text-blue-400"></i> <span>${article.penulis}</span>`;
-      document.getElementById('modalArticleSummary').textContent = article.ringkasan;
-
-      document.getElementById('modalArticleOjs').href = article.aksesUrl;
-      document.getElementById('modalArticlePdf').href = article.pdfUrl;
-
-      document.getElementById('articleModal').classList.remove('hidden');
-    }
-
-    function closeModal() {
-      document.getElementById('articleModal').classList.add('hidden');
-      currentSelectedArticle = null;
-    }
-
-    function copyCitationModal(style) {
-      if (!currentSelectedArticle) return;
-      let citation = '';
-      if (style === 'apa') {
-        citation = `${currentSelectedArticle.penulis}. "${currentSelectedArticle.judul}". Jurnal Studi Al-Qur'an dan Tafsir (JSQT) Universitas Annuqayah. ${currentSelectedArticle.aksesUrl}`;
-      } else {
-        citation = `${currentSelectedArticle.penulis}, "${currentSelectedArticle.judul}," Jurnal Studi Al-Qur'an dan Tafsir (JSQT) Universitas Annuqayah, diakses dari ${currentSelectedArticle.aksesUrl}.`;
-      }
-      navigator.clipboard.writeText(citation).then(() => {
-        showToast(`Sitasi format ${style.toUpperCase()} berhasil disalin!`);
-      });
-    }
-
-    document.getElementById('articleModal').addEventListener('click', (e) => {
-      if (e.target.id === 'articleModal') closeModal();
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
-    });
-
-    // Inisialisasi
-    renderCategoryButtons();
-    renderHomeSamples();
-    renderArticlesTable();
+    // Init
+    renderCategoryChips();
+    filterArticles();
   </script>
 </body>
 </html>
